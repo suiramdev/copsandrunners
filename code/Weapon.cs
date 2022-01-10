@@ -4,20 +4,13 @@ namespace copsandrunners;
 
 public partial class Weapon : BaseWeapon
 {
-	public virtual string WorldModelPath { get; }
+	public virtual string WorldModelPath => null;
 	
 	public override void Spawn()
 	{
 		base.Spawn();
 		
 		if (!string.IsNullOrEmpty(WorldModelPath)) SetModel( WorldModelPath );
-	}
-
-	public override void AttackPrimary()
-	{
-		base.AttackPrimary();
-		
-		Log.Info( "Shoot !" );
 	}
 
 	public override void CreateViewModel()
@@ -33,9 +26,6 @@ public partial class Weapon : BaseWeapon
 			Owner = Owner,
 			EnableViewmodelRendering = true
 		};
-
 		ViewModelEntity.SetModel( ViewModelPath );
-		
-		Log.Info( "ViewModel created !" );
 	}
 }

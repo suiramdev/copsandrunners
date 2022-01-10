@@ -1,0 +1,13 @@
+//
+// copsandrunners.Assets.Slap
+//
+@BaseClass = slap : ""
+[
+	randmultiplier(vector2) : "Rand Multiplier" :  : ""
+	slappower(float) : "Slap Power" : 0 : ""
+	shakeforce(float) : "Shake Force" : 0 : ""
+	shakecurve(curve) : "Shake Curve" :  : ""
+	worldmodel(resource:vmdl) : "World Model" :  : ""
+	viewmodel(resource:vmdl) : "View Model" :  : ""
+]
+

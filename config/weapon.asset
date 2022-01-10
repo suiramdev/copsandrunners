@@ -1,0 +1,9 @@
+//
+// copsandrunners.Assets.Weapon
+//
+@BaseClass = weapon : ""
+[
+	worldmodel(resource:vmdl) : "World Model" :  : ""
+	viewmodel(resource:vmdl) : "View Model" :  : ""
+]
+

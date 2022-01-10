@@ -18,7 +18,6 @@ public class Player : Sandbox.Player
 		set
 		{
 			_role = value;
-			Log.Info( $"{Name} set as {value.ToString()}" );
 			Respawn();
 		}
 	}
@@ -52,14 +51,32 @@ public class Player : Sandbox.Player
 		{
 			case Roles.Cop:
 				Inventory.Add( new Weapons.JailPlacer(), true );
+				Inventory.Add( new Weapons.Jailer() );
+				break;
+			case Roles.Runner:
+				Inventory.Add( new Weapons.Slap(), true );
 				break;
 		}
-		Inventory.Add( new Weapons.Slap(), true );
+	}
+
+	public override void OnKilled()
+	{
+		base.OnKilled();
+
+		Role = Roles.Spectator;
+	}
+
+	public override void Simulate( Client client )
+	{
+		base.Simulate( client );
+
+		SimulateActiveChild( client, ActiveChild );
 	}
 	
 	[ServerCmd( "switchWeapon" )]
 	public static void SwitchWeapon(int slot)
 	{
-		ConsoleSystem.Caller?.Pawn.Inventory.SetActiveSlot( slot, true );
+		Entity pawn = ConsoleSystem.Caller?.Pawn;
+		pawn.ActiveChild = pawn.Inventory.GetSlot( slot );
 	}
 }

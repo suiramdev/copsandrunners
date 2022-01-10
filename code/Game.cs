@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Sandbox;
 
@@ -19,37 +20,16 @@ public class Game : Sandbox.Game
 		base.ClientJoined( client );
 
 		Player player = new Player();
-		client.Pawn = player;
-
 		player.Respawn();
-	}
-	
-	// Taken from facepunch.sandbox
-	[ServerCmd( "spawn" )]
-	public static void Spawn( string modelname )
-	{
-		var owner = ConsoleSystem.Caller?.Pawn;
-
-		if ( ConsoleSystem.Caller == null )
-			return;
-
-		var tr = Trace.Ray( owner.EyePos, owner.EyePos + owner.EyeRot.Forward * 500 )
-			.UseHitboxes()
-			.Ignore( owner )
-			.Run();
-
-		var ent = new Prop();
-		ent.Position = tr.EndPos;
-		ent.Rotation = Rotation.From( new Angles( 0, owner.EyeRot.Angles().yaw, 0 ) ) * Rotation.FromAxis( Vector3.Up, 180 );
-		ent.SetModel( modelname );
-		ent.Position = tr.EndPos - Vector3.Up * ent.CollisionBounds.Mins.z;
+		
+		client.Pawn = player;
 	}
 
 	[ServerCmd( "cr_start" )]
 	public static void StartGame()
 	{
 		Log.Info( "Starting the game..." );
-		var nonCops = All
+		List<Player> nonCops = All
 			.Where( entity => entity is Player player && player.Role != Roles.Cop ).Cast<Player>().ToList();
 		if ( nonCops.Count < 2 )
 		{
@@ -73,7 +53,7 @@ public class Game : Sandbox.Game
 	public static void EndGame()
 	{
 		Log.Info( "Ending the game..." );
-		var players = All
+		List<Player> players = All
 			.Where( entity => entity is Player ).Cast<Player>().ToList();
 		players.ForEach( player => player.Role = Roles.Spectator );
 
