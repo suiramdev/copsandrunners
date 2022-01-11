@@ -1,0 +1,13 @@
+//
+// copsandrunners.Assets.Melee
+//
+@BaseClass = melee : ""
+[
+	randmultiplier(vector2) : "Rand Multiplier" :  : ""
+	shakeforce(float) : "Shake Force" : 0 : ""
+	shakecurve(curve) : "Shake Curve" :  : ""
+	worldmodel(resource:vmdl) : "World Model" :  : ""
+	viewmodel(resource:vmdl) : "View Model" :  : ""
+	damages(float) : "Damages" : 0 : ""
+]
+

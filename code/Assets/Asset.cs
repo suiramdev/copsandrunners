@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace copsandrunners.Assets;
 
-public partial class Asset : Sandbox.Asset
+public class Asset : Sandbox.Asset
 {
 	public static IReadOnlyList<Asset> Assets => _assets;
 	internal static List<Asset> _assets = new();

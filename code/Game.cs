@@ -14,23 +14,24 @@ public enum GameStates
 public class Game : Sandbox.Game
 {
 	private static GameStates _state = GameStates.Wait;
-
+	public static Vector3 JailPosition;
+	
 	public override void ClientJoined( Client client )
 	{
 		base.ClientJoined( client );
 
-		Player player = new Player();
-		player.Respawn();
+		PlayerPawn playerPawn = new PlayerPawn();
+		playerPawn.Role = _state == GameStates.Wait ? Roles.None : Roles.Spectator;
 		
-		client.Pawn = player;
+		client.Pawn = playerPawn;
 	}
 
 	[ServerCmd( "cr_start" )]
 	public static void StartGame()
 	{
 		Log.Info( "Starting the game..." );
-		List<Player> nonCops = All
-			.Where( entity => entity is Player player && player.Role != Roles.Cop ).Cast<Player>().ToList();
+		List<PlayerPawn> nonCops = All
+			.Where( entity => entity is PlayerPawn player && player.Role != Roles.Cop ).Cast<PlayerPawn>().ToList();
 		if ( nonCops.Count < 2 )
 		{
 			Log.Info( "Not enough players" );
@@ -53,8 +54,8 @@ public class Game : Sandbox.Game
 	public static void EndGame()
 	{
 		Log.Info( "Ending the game..." );
-		List<Player> players = All
-			.Where( entity => entity is Player ).Cast<Player>().ToList();
+		List<PlayerPawn> players = All
+			.Where( entity => entity is PlayerPawn ).Cast<PlayerPawn>().ToList();
 		players.ForEach( player => player.Role = Roles.Spectator );
 
 		_state = GameStates.Wait;

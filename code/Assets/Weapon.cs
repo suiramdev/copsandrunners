@@ -10,4 +10,7 @@ public partial class Weapon : Asset
 	
 	[Property, ResourceType("vmdl")]
 	public string ViewModel { get; set; }
+	
+	[Property]
+	public float Damages { get; set; }
 }

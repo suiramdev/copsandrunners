@@ -1,0 +1,26 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	data = 
+	{
+		ui = false
+		volume = 0.05
+		volumerandom = 0.0
+		pitch = 1.0
+		pitchrandom = 0.0
+		distancemax = 100.0
+		sounds = 
+		[
+			"sounds/weapons/melee/punch01.vsnd",
+			"sounds/weapons/melee/punch02.vsnd",
+			"sounds/weapons/melee/punch03.vsnd",
+			"sounds/weapons/melee/punch04.vsnd",
+			"sounds/weapons/melee/punch05.vsnd",
+			"sounds/weapons/melee/punch06.vsnd",
+			"sounds/weapons/melee/punch07.vsnd",
+			"sounds/weapons/melee/punch08.vsnd",
+			"sounds/weapons/melee/punch09.vsnd",
+			"sounds/weapons/melee/punch10.vsnd",
+		]
+		selectionmode = "3"
+	}
+}
