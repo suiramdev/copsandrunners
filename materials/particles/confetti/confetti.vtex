@@ -6,7 +6,7 @@
 		"CDmeInputTexture"
 		{
 			"m_name" "string" "0"
-			"m_fileName" "string" "textures/knockout/star.png"
+			"m_fileName" "string" "materials/particles/confetti/confetti.mks"
 			"m_colorSpace" "string" "srgb"
 			"m_typeString" "string" "2D"
 		}

@@ -13,15 +13,18 @@ public class RobbersMelee : Melee
 		if ( _traceResult.Entity != null )
 		{
 			var targetPawn = (PlayerPawn)_traceResult.Entity;
-			if (IsServer)
-				if (targetPawn.Role == Roles.Cop)
+			if ( IsServer )
+			{
+				if ( targetPawn.Role == Roles.Cop )
 					Log.Info( "Knock" );
-				else
-					_traceResult.Entity.Velocity += _traceResult.Direction * Asset.Damages * _forceMultiplier;
+				
+				_traceResult.Entity.Velocity += _traceResult.Direction * Asset.Damages * _forceMultiplier;
+			}
 
 			if ( targetPawn.IsJailed )
 			{
 				targetPawn.IsJailed = false;
+				Log.Info( "Unjailed !" );
 				
 				var particles = Particles.Create( "particles/confetti.vpcf" );
 				particles.SetEntityBone( 0, _traceResult.Entity, 2 );

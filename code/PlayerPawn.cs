@@ -10,9 +10,10 @@ public enum Roles
 	Runner
 }
 
-public class PlayerPawn : Player
+public partial class PlayerPawn : Player
 {
 	private Roles _role;
+	[Net]
 	public Roles Role
 	{
 		get => _role;
@@ -22,7 +23,8 @@ public class PlayerPawn : Player
 			Respawn();
 		}
 	}
-
+	
+	[Net]
 	public bool IsJailed { get; set; }
 
 	public PlayerPawn()
