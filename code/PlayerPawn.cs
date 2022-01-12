@@ -13,7 +13,6 @@ public enum Roles
 public partial class PlayerPawn : Player
 {
 	private Roles _role;
-	[Net]
 	public Roles Role
 	{
 		get => _role;
@@ -23,9 +22,14 @@ public partial class PlayerPawn : Player
 			Respawn();
 		}
 	}
-	
+
+	private bool _isJailed;
 	[Net]
-	public bool IsJailed { get; set; }
+	public bool IsJailed
+	{
+		get => (Role != Roles.Cop) && _isJailed;
+		set => Jail( value );
+	}
 
 	public PlayerPawn()
 	{
@@ -77,5 +81,14 @@ public partial class PlayerPawn : Player
 		base.Simulate( client );
 
 		SimulateActiveChild( client, ActiveChild );
+	}
+
+	public void Jail(bool value)
+	{
+		_isJailed = value;
+		CollisionGroup = value ? CollisionGroup.Debris : CollisionGroup.Player;
+		
+		if ( value && IsServer )
+			Position = Game.JailPosition;
 	}
 }

@@ -12,5 +12,6 @@ public class JailPlacer : Weapon
 		base.AttackPrimary();
 
 		Game.JailPosition = Owner.Position;
+		Log.Info( "Jail placed !" );
 	}
 }

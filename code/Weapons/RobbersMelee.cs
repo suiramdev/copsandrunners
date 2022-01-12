@@ -24,11 +24,10 @@ public class RobbersMelee : Melee
 			if ( targetPawn.IsJailed )
 			{
 				targetPawn.IsJailed = false;
-				Log.Info( "Unjailed !" );
 				
 				var particles = Particles.Create( "particles/confetti.vpcf" );
 				particles.SetEntityBone( 0, _traceResult.Entity, 2 );
-				Sound.FromEntity( "horn.slap", _traceResult.Entity );
+				Sound.FromWorld( "horn", _traceResult.Entity.Position );
 			}
 		}
 	}

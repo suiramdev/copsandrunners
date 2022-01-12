@@ -60,4 +60,12 @@ public class Game : Sandbox.Game
 
 		_state = GameStates.Wait;
 	}
+	
+	[ServerCmd( "switchWeapon" )]
+	public static void SwitchWeapon(int slot)
+	{
+		ConsoleSystem.Caller?.Pawn.Inventory.SetActiveSlot( slot, true );
+		Entity pawn = ConsoleSystem.Caller?.Pawn;
+		pawn.ActiveChild = pawn.Inventory.GetSlot( slot );
+	}
 }

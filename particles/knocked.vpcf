@@ -525,7 +525,7 @@
 					m_Stops = [  ]
 				}
 			}
-			m_hTexture = resource:"textures/knockout/star.vtex"
+			m_hTexture = resource:"materials/particles/knockout/knockout.vtex"
 		},
 	]
 	m_Children = 

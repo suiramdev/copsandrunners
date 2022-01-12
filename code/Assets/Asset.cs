@@ -17,7 +17,9 @@ public class Asset : Sandbox.Asset
 			_assets.Add( this );
 	}
 
-	public static T FromPath<T>(string path)
+	// Temporary fix of a s&box's issue from 09/01/2022
+	// with Resource.FromPath
+	public new static T FromPath<T>(string path)
 	{
 		return (T) Convert.ChangeType(_assets.First( asset => asset.Path == path ), typeof(T));
 	}

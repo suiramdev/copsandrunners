@@ -3,14 +3,14 @@
 	data = 
 	{
 		ui = false
-		volume = 0.05
+		volume = 1.0
 		volumerandom = 0.0
-		pitch = 0.9
-		pitchrandom = 0.1
-		distancemax = 800.0
+		pitch = 1.0
+		pitchrandom = 0.0
+		distancemax = 2000.0
 		sounds = 
 		[
-			"sounds/weapons/horn.vsnd",
+			"sounds/events/whistle_long01.vsnd",
 		]
 		selectionmode = "3"
 	}
