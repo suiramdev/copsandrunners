@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using copsandrunners.UI;
 using Sandbox;
 
 namespace copsandrunners;
@@ -15,6 +16,12 @@ public class Game : Sandbox.Game
 {
 	private static GameStates _state = GameStates.Wait;
 	public static Vector3 JailPosition;
+
+	public Game()
+	{
+		if ( IsServer )
+			_ = new Hud();
+	}
 	
 	public override void ClientJoined( Client client )
 	{
@@ -59,13 +66,5 @@ public class Game : Sandbox.Game
 		players.ForEach( player => player.Role = Roles.Spectator );
 
 		_state = GameStates.Wait;
-	}
-	
-	[ServerCmd( "switchWeapon" )]
-	public static void SwitchWeapon(int slot)
-	{
-		ConsoleSystem.Caller?.Pawn.Inventory.SetActiveSlot( slot, true );
-		Entity pawn = ConsoleSystem.Caller?.Pawn;
-		pawn.ActiveChild = pawn.Inventory.GetSlot( slot );
 	}
 }
