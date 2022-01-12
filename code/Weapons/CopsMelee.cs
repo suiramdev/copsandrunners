@@ -10,9 +10,13 @@ public class CopsMelee : Melee
 	{
 		base.AttackPrimary();
 		
-		if ( _traceResult.Entity != null && !((PlayerPawn)_traceResult.Entity).IsJailed)
+		if ( _traceResult.Entity != null && !((Player)_traceResult.Entity).IsArrested)
 		{
-			((PlayerPawn)_traceResult.Entity).IsJailed = true;
+			((Player)_traceResult.Entity).Arrest( new OnArrestEventArgs()
+			{
+				Caller = Owner,
+				IsArrested = true
+			} );
 
 			Sound.FromWorld( "arrest.whistle", _traceResult.Entity.Position );
 		}

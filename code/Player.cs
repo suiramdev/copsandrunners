@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System;
+using Sandbox;
 
 namespace copsandrunners;
 
@@ -10,7 +11,14 @@ public enum Roles
 	Runner
 }
 
-public partial class PlayerPawn : Player
+public class OnArrestEventArgs : EventArgs
+{
+	public Entity Caller;
+	public Entity Target;
+	public bool IsArrested;
+}
+
+public partial class Player : Sandbox.Player
 {
 	private Roles _role;
 	public Roles Role
@@ -23,15 +31,12 @@ public partial class PlayerPawn : Player
 		}
 	}
 
-	private bool _isJailed;
+	private bool _isArrested;
 	[Net]
-	public bool IsJailed
-	{
-		get => (Role != Roles.Cop) && _isJailed;
-		set => Jail( value );
-	}
+	public bool IsArrested => (Role != Roles.Cop) && _isArrested;
+	public event EventHandler OnArrest;
 
-	public PlayerPawn()
+	public Player()
 	{
 		Inventory = new BaseInventory(this);
 	}
@@ -83,12 +88,14 @@ public partial class PlayerPawn : Player
 		SimulateActiveChild( client, ActiveChild );
 	}
 
-	public void Jail(bool value)
+	public virtual void Arrest(OnArrestEventArgs e)
 	{
-		_isJailed = value;
-		CollisionGroup = value ? CollisionGroup.Debris : CollisionGroup.Player;
+		_isArrested = e.IsArrested;
+		CollisionGroup = e.IsArrested ? CollisionGroup.Debris : CollisionGroup.Player;
 		
-		if ( value && IsServer )
+		if ( e.IsArrested )
 			Position = Game.JailPosition;
+		
+		OnArrest?.Invoke( this, e );
 	}
 }

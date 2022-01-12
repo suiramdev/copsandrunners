@@ -12,7 +12,7 @@ public class RobbersMelee : Melee
 		
 		if ( _traceResult.Entity != null )
 		{
-			var targetPawn = (PlayerPawn)_traceResult.Entity;
+			var targetPawn = (Player)_traceResult.Entity;
 			if ( IsServer )
 			{
 				if ( targetPawn.Role == Roles.Cop )
@@ -21,9 +21,13 @@ public class RobbersMelee : Melee
 				_traceResult.Entity.Velocity += _traceResult.Direction * Asset.Damages * _forceMultiplier;
 			}
 
-			if ( targetPawn.IsJailed )
+			if ( targetPawn.IsArrested )
 			{
-				targetPawn.IsJailed = false;
+				targetPawn.Arrest( new OnArrestEventArgs()
+				{
+					Caller = Owner,
+					IsArrested = false
+				} );
 				
 				var particles = Particles.Create( "particles/confetti.vpcf" );
 				particles.SetEntityBone( 0, _traceResult.Entity, 2 );

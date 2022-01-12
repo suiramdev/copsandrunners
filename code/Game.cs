@@ -20,18 +20,18 @@ public class Game : Sandbox.Game
 	{
 		base.ClientJoined( client );
 
-		PlayerPawn playerPawn = new PlayerPawn();
-		playerPawn.Role = _state == GameStates.Wait ? Roles.None : Roles.Spectator;
+		Player player = new Player();
+		player.Role = _state == GameStates.Wait ? Roles.None : Roles.Spectator;
 		
-		client.Pawn = playerPawn;
+		client.Pawn = player;
 	}
 
 	[ServerCmd( "cr_start" )]
 	public static void StartGame()
 	{
 		Log.Info( "Starting the game..." );
-		List<PlayerPawn> nonCops = All
-			.Where( entity => entity is PlayerPawn player && player.Role != Roles.Cop ).Cast<PlayerPawn>().ToList();
+		List<Player> nonCops = All
+			.Where( entity => entity is Player player && player.Role != Roles.Cop ).Cast<Player>().ToList();
 		if ( nonCops.Count < 2 )
 		{
 			Log.Info( "Not enough players" );
@@ -54,8 +54,8 @@ public class Game : Sandbox.Game
 	public static void EndGame()
 	{
 		Log.Info( "Ending the game..." );
-		List<PlayerPawn> players = All
-			.Where( entity => entity is PlayerPawn ).Cast<PlayerPawn>().ToList();
+		List<Player> players = All
+			.Where( entity => entity is Player ).Cast<Player>().ToList();
 		players.ForEach( player => player.Role = Roles.Spectator );
 
 		_state = GameStates.Wait;

@@ -17,7 +17,7 @@ public abstract class Weapon : BaseWeapon
 
 	public override void AttackPrimary()
 	{
-		if ( ((PlayerPawn)Owner).IsJailed ) return;
+		if ( ((Player)Owner).IsArrested ) return;
 		
 		base.AttackPrimary();
 	}
