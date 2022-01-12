@@ -85,17 +85,18 @@ public partial class Player : Sandbox.Player
 	{
 		base.Simulate( client );
 
+		if ( Input.ActiveChild != null ) ActiveChild = Input.ActiveChild;
+
 		SimulateActiveChild( client, ActiveChild );
 	}
 
-	public virtual void Arrest(OnArrestEventArgs e)
+	[Event("arrest")]
+	public virtual void Arrest(bool isArrested)
 	{
-		_isArrested = e.IsArrested;
-		CollisionGroup = e.IsArrested ? CollisionGroup.Debris : CollisionGroup.Player;
+		_isArrested = isArrested;
+		CollisionGroup = isArrested ? CollisionGroup.Debris : CollisionGroup.Player;
 		
-		if ( e.IsArrested )
+		if ( isArrested && IsServer )
 			Position = Game.JailPosition;
-		
-		OnArrest?.Invoke( this, e );
 	}
 }

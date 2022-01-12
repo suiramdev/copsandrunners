@@ -12,11 +12,7 @@ public class CopsMelee : Melee
 		
 		if ( _traceResult.Entity != null && !((Player)_traceResult.Entity).IsArrested)
 		{
-			((Player)_traceResult.Entity).Arrest( new OnArrestEventArgs()
-			{
-				Caller = Owner,
-				IsArrested = true
-			} );
+			((Player)_traceResult.Entity).Arrest( false );
 
 			Sound.FromWorld( "arrest.whistle", _traceResult.Entity.Position );
 		}

@@ -14,7 +14,7 @@ public abstract class Melee : Weapon
 		
 		_forceMultiplier = Rand.Float( Asset.RandMultiplier.x, Asset.RandMultiplier.y );
 		
-		new Camera.Modifiers.MeleeShake( Asset.ShakeCurve, Asset.ShakeForce * _forceMultiplier );
+		_ = new Camera.Modifiers.MeleeShake( Asset.ShakeCurve, Asset.ShakeForce * _forceMultiplier );
 		ViewModelEntity?.SetAnimBool( "attack_hit", true );
 		Sound.FromEntity( "woosh.melee", Owner);
 		

@@ -23,11 +23,7 @@ public class RobbersMelee : Melee
 
 			if ( targetPawn.IsArrested )
 			{
-				targetPawn.Arrest( new OnArrestEventArgs()
-				{
-					Caller = Owner,
-					IsArrested = false
-				} );
+				targetPawn.Arrest( false );
 				
 				var particles = Particles.Create( "particles/confetti.vpcf" );
 				particles.SetEntityBone( 0, _traceResult.Entity, 2 );
