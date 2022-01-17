@@ -1,5 +1,13 @@
 {
-    "sharedassets": "*.*",
-    "type": "game",
-    "ident": "sdev.candr"
+  "SharedAssets": "*.*",
+  "Title": "Cops And Runners",
+  "Type": "game",
+  "Org": "sdev",
+  "Ident": "copsandrunners",
+  "Schema": 1,
+  "HasAssets": true,
+  "AssetsPath": "",
+  "HasCode": true,
+  "CodePath": "code",
+  "RootNamespace": "Sandbox"
 }
