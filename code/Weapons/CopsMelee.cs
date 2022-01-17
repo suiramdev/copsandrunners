@@ -9,10 +9,10 @@ public class CopsMelee : Melee
 	public override void AttackPrimary()
 	{
 		base.AttackPrimary();
-		
+
 		if ( _traceResult.Entity != null && !((Player)_traceResult.Entity).IsArrested)
 		{
-			((Player)_traceResult.Entity).Arrest( false );
+			((Player)_traceResult.Entity).Arrest( true );
 
 			Sound.FromWorld( "arrest.whistle", _traceResult.Entity.Position );
 		}

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using copsandrunners.Entities;
 using copsandrunners.UI;
 using Sandbox;
 
@@ -15,7 +16,7 @@ public enum GameStates
 public class Game : Sandbox.Game
 {
 	private static GameStates _state = GameStates.Wait;
-	public static Vector3 JailPosition;
+	public static Jail Jail;
 
 	public Game()
 	{

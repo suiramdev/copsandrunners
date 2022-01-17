@@ -1,4 +1,5 @@
 ﻿using System;
+using copsandrunners.Players;
 using Sandbox;
 
 namespace copsandrunners;
@@ -20,7 +21,7 @@ public class OnArrestEventArgs : EventArgs
 
 public partial class Player : Sandbox.Player
 {
-	private Roles _role;
+	[Net] private Roles _role { get; set; }
 	public Roles Role
 	{
 		get => _role;
@@ -31,49 +32,42 @@ public partial class Player : Sandbox.Player
 		}
 	}
 
-	private bool _isArrested;
-	[Net]
+	[Net] private bool _isArrested { get; set; }
 	public bool IsArrested => (Role != Roles.Cop) && _isArrested;
-	public event EventHandler OnArrest;
+	[Net] public bool IsFrozen { get; set; }
 
 	public Player()
 	{
-		Inventory = new BaseInventory(this);
+		Inventory = new Inventory( this );
 	}
 
 	public override void Respawn()
 	{
 		base.Respawn();
 		SetModel( "models/citizen/citizen.vmdl" );
-		
-		Controller = Role == Roles.Spectator ? new NoclipController() : new WalkController();
+
+		Controller = Role == Roles.Spectator ? new NoclipController() : new Controllers.WalkController();
 		Animator = new StandardPlayerAnimator();
 		Camera = new FirstPersonCamera();
 
-		EnableAllCollisions = true; 
+		EnableAllCollisions = true;
 		EnableDrawing = Role != Roles.Spectator;
 		EnableHideInFirstPerson = true;
 		EnableShadowInFirstPerson = true;
 
-		LoadLoadout();
+		Loadout();
 	}
 
-	private void LoadLoadout()
+	public override void Simulate( Client client )
 	{
-		Inventory.DeleteContents();
-		switch ( Role )
-		{
-			case Roles.Cop:
-				Inventory.Add( new Weapons.JailPlacer(), true );
-				Inventory.Add( new Weapons.CopsMelee() );
-				break;
-			case Roles.Runner:
-			case Roles.None:
-				Inventory.Add( new Weapons.RobbersMelee(), true );
-				break;
-		}
-	}
+		base.Simulate( client );
 
+		if (Input.ActiveChild != null)
+			ActiveChild = Input.ActiveChild;
+		
+		SimulateActiveChild( client, ActiveChild );
+	}
+	
 	public override void OnKilled()
 	{
 		base.OnKilled();
@@ -81,22 +75,44 @@ public partial class Player : Sandbox.Player
 		Role = Roles.Spectator;
 	}
 
-	public override void Simulate( Client client )
+	private void Loadout()
 	{
-		base.Simulate( client );
-
-		if ( Input.ActiveChild != null ) ActiveChild = Input.ActiveChild;
-
-		SimulateActiveChild( client, ActiveChild );
+		Inventory.DeleteContents();
+		switch ( Role )
+		{
+			case Roles.Cop:
+				if (Game.Jail == null)
+					Inventory.Add( new Weapons.JailPlacer() );
+				Inventory.Add( new Weapons.CopsMelee() );
+				break;
+			case Roles.Runner:
+			case Roles.None:
+				Inventory.Add( new Weapons.RunnersMelee(), true );
+				break;
+		}
 	}
 
-	[Event("arrest")]
-	public virtual void Arrest(bool isArrested)
+	[Event( "arrest" )]
+	public virtual void Arrest( bool isArrested )
 	{
 		_isArrested = isArrested;
 		CollisionGroup = isArrested ? CollisionGroup.Debris : CollisionGroup.Player;
-		
+
 		if ( isArrested && IsServer )
-			Position = Game.JailPosition;
+			Position = Game.Jail.Position;
+
+		if ( isArrested )
+			if ( IsServer )
+				Position = Game.Jail.Position;
+	}
+
+	[Event("knock")]
+	public virtual async void Knock()
+	{
+		if ( IsFrozen ) return;
+		
+		IsFrozen = true;
+		await Task.DelaySeconds( 3 );
+		IsFrozen = false;
 	}
 }

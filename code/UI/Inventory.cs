@@ -14,7 +14,7 @@ public class Inventory : Panel
 				SetActiveSlot( inputBuilder, Local.Pawn.Inventory, i - 1 );
 	}
 
-	public static void SetActiveSlot( InputBuilder inputBuilder, IBaseInventory inventory, int slot )
+	private static void SetActiveSlot( InputBuilder inputBuilder, IBaseInventory inventory, int slot )
 	{
 		inventory.SetActiveSlot( slot, false );
 		inputBuilder.ActiveChild = inventory.GetSlot( inventory.GetActiveSlot() );

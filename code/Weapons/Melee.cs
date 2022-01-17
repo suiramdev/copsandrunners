@@ -4,7 +4,7 @@ namespace copsandrunners.Weapons;
 
 public abstract class Melee : Weapon
 {
-	public virtual Assets.Melee Asset { get; }
+	public override Assets.Melee Asset { get; }
 	protected float _forceMultiplier;
 	protected TraceResult _traceResult;
 

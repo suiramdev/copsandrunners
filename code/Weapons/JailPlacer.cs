@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using copsandrunners.Entities;
+using Sandbox;
 
 namespace copsandrunners.Weapons;
 
@@ -11,7 +12,10 @@ public class JailPlacer : Weapon
 	{
 		base.AttackPrimary();
 
-		Game.JailPosition = Owner.Position;
-		Log.Info( "Jail placed !" );
+		if ( Game.Jail != null ) Game.Jail.Delete();
+		Game.Jail = new Jail { Position = Owner.Position };
+		
+		if (IsServer)
+			Delete();
 	}
 }

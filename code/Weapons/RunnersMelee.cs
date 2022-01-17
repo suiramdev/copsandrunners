@@ -2,9 +2,9 @@
 
 namespace copsandrunners.Weapons;
 
-public class RobbersMelee : Melee
+public class RunnersMelee : Melee
 {
-	public override Assets.Melee Asset => Assets.Asset.FromPath<Assets.Melee>( "config/robbers.melee" );
+	public override Assets.Melee Asset => Assets.Asset.FromPath<Assets.Melee>( "config/runners.melee" );
 
 	public override void AttackPrimary()
 	{
@@ -16,8 +16,8 @@ public class RobbersMelee : Melee
 			if ( IsServer )
 			{
 				if ( targetPawn.Role == Roles.Cop )
-					Log.Info( "Knock" );
-				
+					targetPawn.Knock();
+
 				_traceResult.Entity.Velocity += _traceResult.Direction * Asset.Damages * _forceMultiplier;
 			}
 
