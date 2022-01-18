@@ -15,8 +15,8 @@ public enum GameStates
 
 public class Game : Sandbox.Game
 {
-	private static GameStates _state = GameStates.Wait;
-	public static Jail Jail;
+	[Net] public static GameStates State { get; set; } = GameStates.Wait;
+	[Net] public static Jail Jail { get; set; }
 
 	public Game()
 	{
@@ -29,7 +29,7 @@ public class Game : Sandbox.Game
 		base.ClientJoined( client );
 
 		Player player = new Player();
-		player.Role = _state == GameStates.Wait ? Roles.None : Roles.Spectator;
+		player.Role = State == GameStates.Wait ? Roles.None : Roles.Spectator;
 		
 		client.Pawn = player;
 	}
@@ -38,34 +38,33 @@ public class Game : Sandbox.Game
 	public static void StartGame()
 	{
 		Log.Info( "Starting the game..." );
-		List<Player> nonCops = All
-			.Where( entity => entity is Player player && player.Role != Roles.Cop ).Cast<Player>().ToList();
-		if ( nonCops.Count < 2 )
+		List<Player> players = All.Where( entity => entity is Player ).Cast<Player>().ToList();
+		if ( players.Count < 2 )
 		{
 			Log.Info( "Not enough players" );
 			return;
 		}
+		
+		State = GameStates.Play;
 
-		for ( int i = 0; i < Math.Round( (double)nonCops.Count / 3 ); i++ )
+		for ( int i = 0; i < Math.Round( (double)players.Count / 3 ); i++ )
 		{
-			var random = new Random().Next( 0, nonCops.Count - 1 );
-			nonCops[random].Role = Roles.Cop;
-			nonCops.RemoveAt( random );
+			var random = new Random().Next( 0, players.Count - 1 );
+			players[random].Role = Roles.Cop;
+			players.RemoveAt( random );
 		}
 
-		nonCops.ForEach( player => player.Role = Roles.Runner );
-
-		_state = GameStates.Play;
+		players.ForEach( player => player.Role = Roles.Runner );
 	}
 
 	[ServerCmd( "cr_end" )]
 	public static void EndGame()
 	{
 		Log.Info( "Ending the game..." );
-		List<Player> players = All
-			.Where( entity => entity is Player ).Cast<Player>().ToList();
-		players.ForEach( player => player.Role = Roles.Spectator );
-
-		_state = GameStates.Wait;
+		
+		State = GameStates.Wait;
+		
+		List<Player> players = All.Where( entity => entity is Player ).Cast<Player>().ToList();
+		players.ForEach( player => player.Role = Roles.None );
 	}
 }
