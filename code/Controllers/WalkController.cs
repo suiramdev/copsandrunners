@@ -18,7 +18,7 @@ public class WalkController : Sandbox.WalkController
 		move.Trace = move.Trace.Size( mins, maxs )
 			.Ignore( Pawn );
 		if (!((Player)Pawn).IsArrested)
-			move.Trace = move.Trace.WithoutTags( "Jail" );
+			move.Trace = move.Trace.WithoutTags( "ArrestNoCollide" );
 		move.MaxStandableAngle = GroundAngle;
 		move.TryMove( Time.Delta );
 		
@@ -32,7 +32,7 @@ public class WalkController : Sandbox.WalkController
 		move.Trace = move.Trace.Size( mins, maxs )
 			.Ignore( Pawn );
 		if ( !((Player)Pawn).IsArrested )
-			move.Trace = move.Trace.WithoutTags( "Jail" );
+			move.Trace = move.Trace.WithoutTags( "ArrestNoCollide" );
 		move.MaxStandableAngle = GroundAngle;
 		move.TryMoveWithStep( Time.Delta, StepSize );
 		
@@ -56,7 +56,7 @@ public class WalkController : Sandbox.WalkController
 			.HitLayer( CollisionLayer.PLAYER_CLIP, true )
 			.Ignore( Pawn );
 		if ( !((Player)Pawn).IsArrested )
-			trace = trace.WithoutTags( "Jail" );
+			trace = trace.WithoutTags( "ArrestNoCollide" );
 		var traceResults = trace.Run();
 
 		traceResults.EndPos -= TraceOffset;
