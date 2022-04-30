@@ -48,7 +48,7 @@ public partial class Player : Sandbox.Player
 
 		Controller = Role == Roles.Spectator ? new NoclipController() : new Controllers.WalkController();
 		Animator = new StandardPlayerAnimator();
-		Camera = new FirstPersonCamera();
+		CameraMode = new FirstPersonCamera();
 
 		EnableAllCollisions = true;
 		EnableDrawing = Role != Roles.Spectator;

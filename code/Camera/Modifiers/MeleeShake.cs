@@ -4,12 +4,12 @@ namespace copsandrunners.Camera.Modifiers;
 
 public class MeleeShake : CameraModifier
 {
-	private FGDCurve _curve;
-	private float _power;
-	private float _invertX = Rand.Int( -1, 1 );
-	private float _invertY = Rand.FromArray( new[] { -1, 1 } );
+	private readonly FGDCurve _curve;
+	private readonly float _power;
+	private readonly float _invertX = Rand.Int( -1, 1 );
+	private readonly float _invertY = Rand.FromArray( new[] { -1, 1 } );
 	
-	private TimeSince _lifeTime = 0;
+	private readonly TimeSince _lifeTime = 0;
 
 	public MeleeShake( FGDCurve curve, float power)
 	{

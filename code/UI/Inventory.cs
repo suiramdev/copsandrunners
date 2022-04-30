@@ -11,7 +11,7 @@ public class Inventory : Panel
 	{
 		for ( var i = 1; i < 9; i++ )
 			if ( inputBuilder.Pressed( (InputButton)Enum.Parse( typeof(InputButton), $"Slot{i}" ) ) )
-				SetActiveSlot( inputBuilder, Local.Pawn.Inventory, i - 1 );
+				SetActiveSlot( inputBuilder, (Local.Pawn as Player)?.Inventory, i - 1 );
 	}
 
 	private static void SetActiveSlot( InputBuilder inputBuilder, IBaseInventory inventory, int slot )

@@ -10,15 +10,15 @@ public class RunnersMelee : Melee
 	{
 		base.AttackPrimary();
 		
-		if ( _traceResult.Entity != null )
+		if ( TraceResult.Entity != null )
 		{
-			var targetPawn = (Player)_traceResult.Entity;
+			var targetPawn = (Player)TraceResult.Entity;
 			if ( IsServer )
 			{
 				if ( targetPawn.Role == Roles.Cop )
 					targetPawn.Knock();
 
-				_traceResult.Entity.Velocity += _traceResult.Direction * Asset.Damages * _forceMultiplier;
+				TraceResult.Entity.Velocity += TraceResult.Direction * Asset.Damages * ForceMultiplier;
 			}
 
 			if ( targetPawn.IsArrested )
@@ -26,8 +26,8 @@ public class RunnersMelee : Melee
 				targetPawn.Arrest( false );
 				
 				var particles = Particles.Create( "particles/confetti.vpcf" );
-				particles.SetEntityBone( 0, _traceResult.Entity, 2 );
-				Sound.FromWorld( "horn", _traceResult.Entity.Position );
+				particles.SetEntityBone( 0, TraceResult.Entity, 2 );
+				Sound.FromWorld( "horn", TraceResult.Entity.Position );
 			}
 		}
 	}

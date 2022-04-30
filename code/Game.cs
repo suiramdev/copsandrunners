@@ -15,7 +15,7 @@ public enum GameStates
 
 public class Game : Sandbox.Game
 {
-	[Net] public static GameStates State { get; set; } = GameStates.Wait;
+	[Net] private static GameStates State { get; set; } = GameStates.Wait;
 	[Net] public static Jail Jail { get; set; }
 
 	public Game()
@@ -28,9 +28,8 @@ public class Game : Sandbox.Game
 	{
 		base.ClientJoined( client );
 
-		Player player = new Player();
-		player.Role = State == GameStates.Wait ? Roles.None : Roles.Spectator;
-		
+		Player player = new Player { Role = State == GameStates.Wait ? Roles.None : Roles.Spectator };
+
 		client.Pawn = player;
 	}
 

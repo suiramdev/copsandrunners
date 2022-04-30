@@ -1,20 +1,25 @@
 ﻿using Sandbox;
 
-// Taken from facepunch.sandbox as example
+/* Taken directly from fp.sandbox */
 public class ViewModel : BaseViewModel
 {
-	protected float SwingInfluence => 0.05f;
-	protected float ReturnSpeed => 5.0f;
-	protected float MaxOffsetLength => 10.0f;
-	protected float BobCycleTime => 7;
-	protected Vector3 BobDirection => new Vector3( 0.0f, 1.0f, 0.5f );
+	private static float SwingInfluence => 0.05f;
+	private static float ReturnSpeed => 5.0f;
+	private static float MaxOffsetLength => 10.0f;
+	private static float BobCycleTime => 7;
+	private static Vector3 BobDirection => new Vector3( 0.0f, 1.0f, 0.5f );
 
-	private Vector3 swingOffset;
-	private float lastPitch;
-	private float lastYaw;
-	private float bobAnim;
+	private Vector3 _swingOffset;
+	private float _lastPitch;
+	private float _lastYaw;
+	private float _bobAnim;
 
-	private bool activated = false;
+	private bool _activated = false;
+
+	private const bool EnableSwingAndBob = true;
+
+	private float YawInertia { get; set; }
+	private float PitchInertia { get; set; }
 
 	public override void PostCameraSetup( ref CameraSetup camSetup )
 	{
@@ -23,79 +28,95 @@ public class ViewModel : BaseViewModel
 		if ( !Local.Pawn.IsValid() )
 			return;
 
-		if ( !activated )
+		if ( !_activated )
 		{
-			lastPitch = camSetup.Rotation.Pitch();
-			lastYaw = camSetup.Rotation.Yaw();
+			_lastPitch = camSetup.Rotation.Pitch();
+			_lastYaw = camSetup.Rotation.Yaw();
 
-			activated = true;
+			YawInertia = 0;
+			PitchInertia = 0;
+
+			_activated = true;
 		}
 
 		Position = camSetup.Position;
 		Rotation = camSetup.Rotation;
 
-		camSetup.ViewModel.FieldOfView = FieldOfView;
-
-		var playerVelocity = Local.Pawn.Velocity;
-
-		if ( Local.Pawn is Player player )
+		var cameraBoneIndex = GetBoneIndex( "camera" );
+		if ( cameraBoneIndex != -1 )
 		{
-			var controller = player.GetActiveController();
-			if ( controller != null && controller.HasTag( "noclip" ) )
-			{
-				playerVelocity = Vector3.Zero;
-			}
+			camSetup.Rotation *= (Rotation.Inverse * GetBoneTransform( cameraBoneIndex ).Rotation);
 		}
 
 		var newPitch = Rotation.Pitch();
 		var newYaw = Rotation.Yaw();
 
-		var pitchDelta = Angles.NormalizeAngle( newPitch - lastPitch );
-		var yawDelta = Angles.NormalizeAngle( lastYaw - newYaw );
+		PitchInertia = Angles.NormalizeAngle( newPitch - _lastPitch );
+		YawInertia = Angles.NormalizeAngle( _lastYaw - newYaw );
 
-		var verticalDelta = playerVelocity.z * Time.Delta;
-		var viewDown = Rotation.FromPitch( newPitch ).Up * -1.0f;
-		verticalDelta *= (1.0f - System.MathF.Abs( viewDown.Cross( Vector3.Down ).y ));
-		pitchDelta -= verticalDelta * 1;
+		if ( EnableSwingAndBob )
+		{
+			var playerVelocity = Local.Pawn.Velocity;
 
-		var offset = CalcSwingOffset( pitchDelta, yawDelta );
-		offset += CalcBobbingOffset( playerVelocity );
+			if ( Local.Pawn is Player player )
+			{
+				var controller = player.GetActiveController();
+				if ( controller != null && controller.HasTag( "noclip" ) )
+				{
+					playerVelocity = Vector3.Zero;
+				}
+			}
 
-		Position += Rotation * offset;
+			var verticalDelta = playerVelocity.z * Time.Delta;
+			var viewDown = Rotation.FromPitch( newPitch ).Up * -1.0f;
+			verticalDelta *= (1.0f - System.MathF.Abs( viewDown.Cross( Vector3.Down ).y ));
+			var pitchDelta = PitchInertia - verticalDelta * 1;
+			var yawDelta = YawInertia;
 
-		lastPitch = newPitch;
-		lastYaw = newYaw;
+			var offset = CalcSwingOffset( pitchDelta, yawDelta );
+			offset += CalcBobbingOffset( playerVelocity );
+
+			Position += Rotation * offset;
+		}
+		else
+		{
+			SetAnimParameter( "aim_yaw_inertia", YawInertia );
+			SetAnimParameter( "aim_pitch_inertia", PitchInertia );
+		}
+
+		_lastPitch = newPitch;
+		_lastYaw = newYaw;
 	}
 
-	protected Vector3 CalcSwingOffset( float pitchDelta, float yawDelta )
+	private Vector3 CalcSwingOffset( float pitchDelta, float yawDelta )
 	{
 		Vector3 swingVelocity = new Vector3( 0, yawDelta, pitchDelta );
 
-		swingOffset -= swingOffset * ReturnSpeed * Time.Delta;
-		swingOffset += (swingVelocity * SwingInfluence);
+		_swingOffset -= _swingOffset * ReturnSpeed * Time.Delta;
+		_swingOffset += (swingVelocity * SwingInfluence);
 
-		if ( swingOffset.Length > MaxOffsetLength )
+		if ( _swingOffset.Length > MaxOffsetLength )
 		{
-			swingOffset = swingOffset.Normal * MaxOffsetLength;
+			_swingOffset = _swingOffset.Normal * MaxOffsetLength;
 		}
 
-		return swingOffset;
+		return _swingOffset;
 	}
 
-	protected Vector3 CalcBobbingOffset( Vector3 velocity )
+	private Vector3 CalcBobbingOffset( Vector3 velocity )
 	{
-		bobAnim += Time.Delta * BobCycleTime;
+		_bobAnim += Time.Delta * BobCycleTime;
 
 		var twoPI = System.MathF.PI * 2.0f;
 
-		if ( bobAnim > twoPI )
+		if ( _bobAnim > twoPI )
 		{
-			bobAnim -= twoPI;
+			_bobAnim -= twoPI;
 		}
 
 		var speed = new Vector2( velocity.x, velocity.y ).Length;
 		speed = speed > 10.0 ? speed : 0.0f;
-		var offset = BobDirection * (speed * 0.005f) * System.MathF.Cos( bobAnim );
+		var offset = BobDirection * (speed * 0.005f) * System.MathF.Cos( _bobAnim );
 		offset = offset.WithZ( -System.MathF.Abs( offset.z ) );
 
 		return offset;

@@ -51,15 +51,15 @@ public class WalkController : Sandbox.WalkController
 		var trace = Trace.Ray( start + TraceOffset, end + TraceOffset )
 			.Size( mins, maxs )
 			.HitLayer( CollisionLayer.All, false )
-			.HitLayer( CollisionLayer.Solid, true )
-			.HitLayer( CollisionLayer.GRATE, true )
-			.HitLayer( CollisionLayer.PLAYER_CLIP, true )
+			.HitLayer( CollisionLayer.Solid )
+			.HitLayer( CollisionLayer.GRATE )
+			.HitLayer( CollisionLayer.PLAYER_CLIP )
 			.Ignore( Pawn );
 		if ( !((Player)Pawn).IsArrested )
 			trace = trace.WithoutTags( "ArrestNoCollide" );
 		var traceResults = trace.Run();
 
-		traceResults.EndPos -= TraceOffset;
+		traceResults.EndPosition -= TraceOffset;
 		return traceResults;
 	}
 }
