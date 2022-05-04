@@ -9,7 +9,10 @@ public class Hud : HudEntity<RootPanel>
 	{
 		if (IsServer)
 			return;
+		
+		RootPanel.StyleSheet.Load( "/UI/Hud.scss" );
 
 		RootPanel.AddChild<Inventory>();
+		RootPanel.AddChild<Phase>();
 	}
 }
