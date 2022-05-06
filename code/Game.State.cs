@@ -41,6 +41,7 @@ internal partial class Game
 		StateTimer = 20f;
 		await WaitStateTimer();
 		
+		// Set players roles and positions
 		var players = All.OfType<Player>().ToList();
 
 		for ( var i = 0; i < Math.Round( (double)players.Count / 3 ); i++ )
@@ -51,6 +52,8 @@ internal partial class Game
 		}
 
 		players.ForEach( player => player.Role = Roles.Runner );
+	
+		// TODO: Set player positions randomly in the map
 		
 		State = GameStates.Prepare;
 		StateTimer = 15f;
@@ -58,26 +61,43 @@ internal partial class Game
 		
 		State = GameStates.Play;
 		StateTimer = 20f;
-		await WaitStateTimer();
+		await WaitStateTimer(ShouldEnd);
 		
 		State = GameStates.End;
 		StateTimer = 10f;
 		await WaitStateTimer();
 		
 		players = All.OfType<Player>().ToList();
-		players.ForEach( player => player.Role = Roles.None );
+		players.ForEach( player => {
+			player.Arrest(false);	
+			player.Role = Roles.None;
+		});
+		
+		await GameLoop();
 	}
 	
-	private async Task WaitStateTimer()
+	// stopException is used to stop the loop if it is returning true
+	private async Task WaitStateTimer(Func<bool> stopException = null)
 	{
 		while ( StateTimer > 0 )
 		{
+			if ( stopException != null && stopException.Invoke() )
+			{
+				Log.Info( "Game loop stopped" );
+				break;
+			}
+
 			await Task.DelayRealtimeSeconds( 1.0f );
 		}
-
-		// extra second for fun
-		await Task.DelayRealtimeSeconds( 1.0f );
 	}
 
 	private bool CanStart() => Client.All.Count > 1;
+	
+	private bool ShouldEnd()
+	{
+		var runners = All.OfType<Player>().Where( player => player.Role == Roles.Runner ).ToList();
+		var arrested = runners.Where( player => player.IsArrested ).ToList();
+		
+		return runners.Count <= arrested.Count;
+	}
 }
