@@ -16,29 +16,41 @@ public class Phase : Panel
 		_phaseName = Add.Label("");
 		
 		Update();
-		
-		Game.StateChanged += OnStateChanged;
+		Game.Instance.StateChanged += ( _, _ ) => Update();
 	}
 
 	private void Update()
 	{
-		switch ( Game.State )
+		_phaseTimer.Style.Display = DisplayMode.Flex;
+		_phaseName.Style.Display = DisplayMode.Flex;
+
+		switch ( Game.Instance.State )
 		{
-			case GameStates.Waiting:
+			case GameStates.Wait:
 				_phaseTimer.Style.Display = DisplayMode.None;
-				_phaseName.Style.Display = DisplayMode.Flex;
 				_phaseName.Text = "Waiting for more players";
 				break;
-			default:
-				_phaseTimer.Style.Display = DisplayMode.Flex;
-				_phaseName.Style.Display = DisplayMode.Flex;
+			case GameStates.Start:
+				_phaseName.Text = "The game is about to start";
+				break;
+			case GameStates.Prepare:
+				_phaseName.Text = "Prepare to chase !";
+				break;
+			case GameStates.Play:
+				_phaseName.Style.Display = DisplayMode.None;
+				break;
+			case GameStates.End:
+				_phaseName.Text = "Game over";
 				break;
 		}
 	}
-	
-	private void OnStateChanged( GameStates newstate, GameStates laststate )
+
+	public override void Tick()
 	{
-		Update();
+		base.Tick();
+		
+		_phaseTimer.Text = Game.Instance.StateTimer > 0f ? 
+			TimeSpan.FromSeconds( Game.Instance.StateTimer ).ToString( @"mm\:ss" )
+			: "00:00";
 	}
-	
 }
