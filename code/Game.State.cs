@@ -41,7 +41,7 @@ internal partial class Game
 		StateTimer = 20f;
 		await WaitStateTimer();
 		
-		var players = Client.All.Cast<Player>().ToList();
+		var players = All.OfType<Player>().ToList();
 
 		for ( var i = 0; i < Math.Round( (double)players.Count / 3 ); i++ )
 		{
@@ -64,7 +64,7 @@ internal partial class Game
 		StateTimer = 10f;
 		await WaitStateTimer();
 		
-		players = Client.All.Cast<Player>().ToList();
+		players = All.OfType<Player>().ToList();
 		players.ForEach( player => player.Role = Roles.None );
 	}
 	
