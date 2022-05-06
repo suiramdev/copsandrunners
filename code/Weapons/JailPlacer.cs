@@ -11,11 +11,12 @@ public class JailPlacer : Weapon
 	public override void AttackPrimary()
 	{
 		base.AttackPrimary();
-
-		if ( Game.Jail != null ) Game.Jail.Delete();
-		Game.Jail = new Jail { Position = Owner.Position };
 		
-		if (IsServer)
+		if ( IsServer )
+		{
+			if ( Game.Jail != null ) Game.Jail.Delete();
+			Game.Jail = new Jail { Position = Owner.Position };
 			Delete();
+		}
 	}
 }
