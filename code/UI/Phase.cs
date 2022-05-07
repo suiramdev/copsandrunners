@@ -40,7 +40,7 @@ public class Phase : Panel
 				_phaseName.Style.Display = DisplayMode.None;
 				break;
 			case GameStates.End:
-				_phaseName.Text = "Game over";
+				_phaseName.Text = Game.Instance.Winners == Roles.Cop ? "All runners are arrested" : "Runners escaped from the police";
 				break;
 		}
 	}

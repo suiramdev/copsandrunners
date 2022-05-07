@@ -22,6 +22,7 @@ internal partial class Game
 	[Net, Change( nameof(OnStateChanged) )]
 	public GameStates State { get; set; } = GameStates.Wait;
 	[Net] public RealTimeUntil StateTimer { get; set; } = 0f;
+	[Net] public Roles Winners { get; set; }
 	
 	public event StateChanged StateChanged;
 	
@@ -61,12 +62,15 @@ internal partial class Game
 		
 		State = GameStates.Play;
 		StateTimer = 20f;
-		await WaitStateTimer(ShouldEnd);
-		
+		await WaitStateTimer(HasCopWon);
+
+		Winners = HasCopWon() ? Roles.Cop : Roles.Runner;
+
 		State = GameStates.End;
 		StateTimer = 10f;
 		await WaitStateTimer();
-		
+
+		Winners = Roles.None;
 		players = All.OfType<Player>().ToList();
 		players.ForEach( player => {
 			player.Arrest(false);	
@@ -82,10 +86,7 @@ internal partial class Game
 		while ( StateTimer > 0 )
 		{
 			if ( stopException != null && stopException.Invoke() )
-			{
-				Log.Info( "Game loop stopped" );
 				break;
-			}
 
 			await Task.DelayRealtimeSeconds( 1.0f );
 		}
@@ -93,7 +94,7 @@ internal partial class Game
 
 	private bool CanStart() => Client.All.Count > 1;
 	
-	private bool ShouldEnd()
+	private bool HasCopWon()
 	{
 		var runners = All.OfType<Player>().Where( player => player.Role == Roles.Runner ).ToList();
 		var arrested = runners.Where( player => player.IsArrested ).ToList();
