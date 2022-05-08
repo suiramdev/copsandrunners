@@ -7,7 +7,7 @@ public class Jail : ModelEntity
 	public override void Spawn()
 	{
 		base.Spawn();
-		SetModel( "models/jail.vmdl" );
+		SetModel( "models/ball_pit.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
 
 		new JailCollisions()

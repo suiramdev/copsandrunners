@@ -11,83 +11,41 @@
 				[
 					{
 						_class = "PhysicsMeshFile"
-						name = "pool"
+						name = "ball_pit"
 						parent_bone = ""
 						surface_prop = "default"
-						collision_prop = "default"
+						collision_group = ""
+						collision_interact_as = ""
+						collision_interact_with = ""
+						collision_interact_exclude = ""
 						recenter_on_parent_bone = false
 						offset_origin = [ 0.0, 0.0, 0.0 ]
 						offset_angles = [ 0.0, 0.0, 0.0 ]
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
-						filename = "models/pool.fbx"
+						filename = "models/ball_pit.fbx"
 						import_scale = 1.0
 						maxMeshVertices = 0
 						qemError = 0.0
 						import_filter = 
 						{
 							exclude_by_default = false
-							exception_list = [  ]
+							exception_list = 
+							[
+								"balls",
+								"floor",
+								"inflate",
+								"inflate_colision",
+							]
 						}
-					},
-				]
-			},
-			{
-				_class = "RenderMeshList"
-				children = 
-				[
-					{
-						_class = "RenderMeshFile"
-						filename = "models/pool.fbx"
-						import_translation = [ 0.0, 0.0, 0.0 ]
-						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 1.0
-						align_origin_x_type = "None"
-						align_origin_y_type = "None"
-						align_origin_z_type = "None"
-						parent_bone = ""
-						import_filter = 
-						{
-							exclude_by_default = false
-							exception_list = [  ]
-						}
-					},
-				]
-			},
-			{
-				_class = "MaterialGroupList"
-				children = 
-				[
-					{
-						_class = "DefaultMaterialGroup"
-						remaps = 
-						[
-							{
-								from = "ground.vmat"
-								to = "materials/default/white.vmat"
-							},
-							{
-								from = "torus01.vmat"
-								to = "materials/default/white.vmat"
-							},
-							{
-								from = "torus02.vmat"
-								to = "materials/default/white.vmat"
-							},
-							{
-								from = "torus03.vmat"
-								to = "materials/default/white.vmat"
-							},
-						]
-						use_global_default = false
-						global_default_material = ""
 					},
 				]
 			},
 		]
 		model_archetype = ""
 		primary_associated_entity = ""
-		anim_graph_name = "S"
+		anim_graph_name = ""
+		base_model_name = ""
 	}
 }

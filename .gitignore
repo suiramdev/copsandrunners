@@ -11,3 +11,4 @@ tools_thumbnail_cache.bin
 .intermediate/net5.0/sandbox.deps.json
 maps/editor/_bakeresourcecache/toolscene_default_baked/*
 .vs/*
+*.generated.vtex_c
