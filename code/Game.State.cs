@@ -45,10 +45,19 @@ internal partial class Game
 		// Set players roles and positions
 		var players = All.OfType<Player>().ToList();
 
+		var chiefSelected = false;
 		for ( var i = 0; i < Math.Round( (double)players.Count / 3 ); i++ )
 		{
 			var random = new Random().Next( 0, players.Count - 1 );
-			players[random].Role = Roles.Cop;
+			if ( chiefSelected )
+			{
+				players[random].Role = Roles.Cop;
+			}
+			else
+			{
+				chiefSelected = true;
+				players[random].Role = Roles.ChiefCop;
+			}
 			players[random].Team = Teams.Cops;
 			players.RemoveAt( random );
 		}
