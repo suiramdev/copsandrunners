@@ -9,7 +9,15 @@ public enum Roles
 	None,
 	Spectator,
 	Cop,
+	ChiefCop,
 	Runner
+}
+
+public enum Teams
+{
+	None,
+	Runners,
+	Cops
 }
 
 public class OnArrestEventArgs : EventArgs
@@ -21,7 +29,7 @@ public class OnArrestEventArgs : EventArgs
 
 public partial class Player : Sandbox.Player
 {
-	[Net] private Roles _role { get; set; }
+	[Net] private Roles _role { get; set; } = Roles.None;
 	public Roles Role
 	{
 		get => _role;
@@ -32,6 +40,7 @@ public partial class Player : Sandbox.Player
 		}
 	}
 
+	[Net] public Teams Team { get; set; } = Teams.None;
 	[Net] private bool _isArrested { get; set; }
 	public bool IsArrested => (Role != Roles.Cop) && _isArrested;
 	[Net] public bool IsFrozen { get; set; }
@@ -81,12 +90,14 @@ public partial class Player : Sandbox.Player
 		switch ( Role )
 		{
 			case Roles.Cop:
-				//if (Game.Jail == null)
+				if (!Game.Jail.IsValid)
 					Inventory.Add( new Weapons.JailPlacer() );
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
+			case Roles.ChiefCop:
+				Inventory.Add( new Weapons.CopsMelee() );
+				break;
 			case Roles.Runner:
-			case Roles.None:
 				Inventory.Add( new Weapons.RunnersMelee(), true );
 				break;
 		}

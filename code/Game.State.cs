@@ -49,10 +49,15 @@ internal partial class Game
 		{
 			var random = new Random().Next( 0, players.Count - 1 );
 			players[random].Role = Roles.Cop;
+			players[random].Team = Teams.Cops;
 			players.RemoveAt( random );
 		}
 
-		players.ForEach( player => player.Role = Roles.Runner );
+		players.ForEach( player =>
+		{
+			player.Team = Teams.Runners;
+			player.Role = Roles.Runner;
+		});
 	
 		// TODO: Set player positions randomly in the map
 		
@@ -75,8 +80,12 @@ internal partial class Game
 		players.ForEach( player => {
 			player.Arrest(false);	
 			player.Role = Roles.None;
+			player.Team = Teams.None;
 		});
-		
+	
+		if (Jail.IsValid)
+			Jail.Delete();
+
 		await GameLoop();
 	}
 	
@@ -96,7 +105,7 @@ internal partial class Game
 	
 	private bool HasCopWon()
 	{
-		var runners = All.OfType<Player>().Where( player => player.Role == Roles.Runner ).ToList();
+		var runners = All.OfType<Player>().Where( player => player.Team == Teams.Runners).ToList();
 		var arrested = runners.Where( player => player.IsArrested ).ToList();
 		
 		return runners.Count <= arrested.Count;
