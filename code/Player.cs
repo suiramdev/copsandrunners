@@ -90,11 +90,11 @@ public partial class Player : Sandbox.Player
 		switch ( Role )
 		{
 			case Roles.Cop:
-				if (!Game.Jail.IsValid)
-					Inventory.Add( new Weapons.JailPlacer() );
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
 			case Roles.ChiefCop:
+				if ( Game.Jail == null )
+					Inventory.Add( new Weapons.JailPlacer() );
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
 			case Roles.Runner:
