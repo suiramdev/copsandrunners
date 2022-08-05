@@ -14,12 +14,12 @@ partial class Game : Sandbox.Game
 	public Game()
 	{
 		Instance = this;
-		
-		if ( IsServer )
-		{
-			_ = new Hud();
-			_ = GameLoop();
-		}
+
+		if ( !IsServer )
+			return;
+
+		_ = new Hud();
+		_ = GameLoop();
 	}
 	
 	[Net] public static Jail Jail { get; set; }

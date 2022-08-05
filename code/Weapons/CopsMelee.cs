@@ -4,17 +4,17 @@ namespace copsandrunners.Weapons;
 
 public class CopsMelee : Melee
 {
-	public override Assets.Melee Asset => Assets.Asset.FromPath<Assets.Melee>( "config/cops.melee" );
+	public override Assets.Melee Asset => ResourceLibrary.Get<Assets.Melee>( "config/weapons/cops.melee" );
 
 	public override void AttackPrimary()
 	{
 		base.AttackPrimary();
 
-		if ( TraceResult.Entity != null && !((Player)TraceResult.Entity).IsArrested)
-		{
-			((Player)TraceResult.Entity).Arrest( true );
+		if ( !TraceResult.Entity.IsValid || ((Player)TraceResult.Entity).IsArrested )
+			return;
 
-			Sound.FromWorld( "arrest.whistle", TraceResult.Entity.Position );
-		}
+		((Player)TraceResult.Entity).Arrest( true );
+
+		Sound.FromWorld( "arrest.whistle", TraceResult.Entity.Position );
 	}
 }

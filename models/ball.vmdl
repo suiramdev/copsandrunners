@@ -14,32 +14,8 @@
 						remaps = 
 						[
 							{
-								from = "ball_1.vmat"
+								from = "ball.vmat"
 								to = "materials/models/ball_pit/ball_1.vmat"
-							},
-							{
-								from = "ball_2.vmat"
-								to = "materials/models/ball_pit/ball_2.vmat"
-							},
-							{
-								from = "ball_3.vmat"
-								to = "materials/models/ball_pit/ball_3.vmat"
-							},
-							{
-								from = "floor.vmat"
-								to = "materials/models/ball_pit/floor.vmat"
-							},
-							{
-								from = "inflate_1.vmat"
-								to = "materials/models/ball_pit/inflate_1.vmat"
-							},
-							{
-								from = "inflate_2.vmat"
-								to = "materials/models/ball_pit/inflate_2.vmat"
-							},
-							{
-								from = "inflate_3.vmat"
-								to = "materials/models/ball_pit/inflate_3.vmat"
 							},
 						]
 						use_global_default = false
@@ -53,10 +29,10 @@
 				[
 					{
 						_class = "RenderMeshFile"
-						filename = "models/ball_pit.fbx"
+						filename = "models/ball.fbx"
 						import_translation = [ 0.0, 0.0, 0.0 ]
 						import_rotation = [ 0.0, 0.0, 0.0 ]
-						import_scale = 1.0
+						import_scale = 0.2
 						align_origin_x_type = "None"
 						align_origin_y_type = "None"
 						align_origin_z_type = "None"
@@ -64,12 +40,25 @@
 						import_filter = 
 						{
 							exclude_by_default = false
-							exception_list = 
-							[
-								"jail",
-								"inflate_colision",
-							]
+							exception_list = [  ]
 						}
+					},
+				]
+			},
+			{
+				_class = "PhysicsShapeList"
+				children = 
+				[
+					{
+						_class = "PhysicsShapeSphere"
+						parent_bone = ""
+						surface_prop = "default"
+						collision_group = ""
+						collision_interact_as = ""
+						collision_interact_with = ""
+						collision_interact_exclude = ""
+						radius = 2.5
+						center = [ 0.0, 0.0, 0.0 ]
 					},
 				]
 			},

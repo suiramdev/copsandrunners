@@ -22,7 +22,7 @@ internal partial class Game
 	[Net, Change( nameof(OnStateChanged) )]
 	public GameStates State { get; set; } = GameStates.Wait;
 	[Net] public RealTimeUntil StateTimer { get; set; } = 0f;
-	[Net] public Roles Winners { get; set; }
+	[Net] public Teams Winners { get; set; } = Teams.None;
 	
 	public event StateChanged StateChanged;
 	
@@ -39,7 +39,7 @@ internal partial class Game
 		}
 
 		State = GameStates.Start;
-		StateTimer = 20f;
+		StateTimer = 8f;
 		await WaitStateTimer();
 		
 		// Set players roles and positions
@@ -75,16 +75,16 @@ internal partial class Game
 		await WaitStateTimer();
 		
 		State = GameStates.Play;
-		StateTimer = 20f;
+		StateTimer = 120f;
 		await WaitStateTimer(HasCopWon);
 
-		Winners = HasCopWon() ? Roles.Cop : Roles.Runner;
+		Winners = HasCopWon() ? Teams.Cops : Teams.Runners;
 
 		State = GameStates.End;
 		StateTimer = 10f;
 		await WaitStateTimer();
 
-		Winners = Roles.None;
+		Winners = Teams.None;
 		players = All.OfType<Player>().ToList();
 		players.ForEach( player => {
 			player.Arrest(false);	

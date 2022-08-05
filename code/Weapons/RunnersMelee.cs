@@ -4,7 +4,7 @@ namespace copsandrunners.Weapons;
 
 public class RunnersMelee : Melee
 {
-	public override Assets.Melee Asset => Assets.Asset.FromPath<Assets.Melee>( "config/runners.melee" );
+	public override Assets.Melee Asset => ResourceLibrary.Get<Assets.Melee>( "config/weapons/runners.melee" );
 
 	public override void AttackPrimary()
 	{

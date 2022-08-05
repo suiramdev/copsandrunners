@@ -2,15 +2,20 @@
 
 namespace copsandrunners.Assets;
 
-[Library("melee"), AutoGenerate]
-public class Melee : Weapon
+[GameResource("Melee Weapon", "melee", "A melee weapon.")]
+public partial class Melee : GameResource
 {
-	[Property]
+	[Property, ResourceType("vmdl")]
+	public string WorldModel { get; set; }
+	
+	[ResourceType("vmdl")]
+	public string ViewModel { get; set; }
+	
+	public float Damages { get; set; }
+	
 	public Vector2 RandMultiplier { get; set; }
 
-	[Property]
 	public float ShakeForce { get; set; }
 	
-	[Property]
 	public FGDCurve ShakeCurve { get; set; }
 }

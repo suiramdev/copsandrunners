@@ -1,5 +1,4 @@
-﻿using copsandrunners.Entities;
-using Sandbox;
+﻿using Sandbox;
 
 namespace copsandrunners.Controllers;
 
@@ -17,8 +16,8 @@ public class WalkController : Sandbox.WalkController
 		var move = new MoveHelper( Position, Velocity );
 		move.Trace = move.Trace.Size( mins, maxs )
 			.Ignore( Pawn );
-		if (!((Player)Pawn).IsArrested)
-			move.Trace = move.Trace.WithoutTags( "ArrestNoCollide" );
+		if ( !((Player)Pawn).IsArrested )
+			move.Trace = move.Trace.WithoutTags( "jail" );
 		move.MaxStandableAngle = GroundAngle;
 		move.TryMove( Time.Delta );
 		
@@ -32,7 +31,7 @@ public class WalkController : Sandbox.WalkController
 		move.Trace = move.Trace.Size( mins, maxs )
 			.Ignore( Pawn );
 		if ( !((Player)Pawn).IsArrested )
-			move.Trace = move.Trace.WithoutTags( "ArrestNoCollide" );
+			move.Trace = move.Trace.WithoutTags( "jail" );
 		move.MaxStandableAngle = GroundAngle;
 		move.TryMoveWithStep( Time.Delta, StepSize );
 		
@@ -56,7 +55,7 @@ public class WalkController : Sandbox.WalkController
 			.HitLayer( CollisionLayer.PLAYER_CLIP )
 			.Ignore( Pawn );
 		if ( !((Player)Pawn).IsArrested )
-			trace = trace.WithoutTags( "ArrestNoCollide" );
+			trace = trace.WithoutTags( "jail" );
 		var traceResults = trace.Run();
 
 		traceResults.EndPosition -= TraceOffset;

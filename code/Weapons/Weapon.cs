@@ -4,7 +4,6 @@ namespace copsandrunners.Weapons;
 
 public abstract class Weapon : BaseWeapon
 {
-	public virtual Assets.Melee Asset { get; }
 	protected virtual string WorldModelPath { get; }
 	public override string ViewModelPath { get; }
 

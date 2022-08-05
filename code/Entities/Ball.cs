@@ -2,14 +2,12 @@
 
 namespace copsandrunners.Entities;
 
-public class JailCollisions : ModelEntity
+public class Ball : ModelEntity
 {
 	public override void Spawn()
 	{
 		base.Spawn();
-		SetModel( "models/jail.vmdl" );
+		SetModel( "models/ball.vmdl" );
 		SetupPhysicsFromModel( PhysicsMotionType.Dynamic );
-		
-		Tags.Add( "jail" );
 	}
 }

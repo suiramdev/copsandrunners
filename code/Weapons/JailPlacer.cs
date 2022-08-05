@@ -8,8 +8,9 @@ namespace copsandrunners.Weapons;
 
 public class JailPlacer : Weapon
 {
-	public override string ViewModelPath => "weapons/rust_flashlight/v_rust_flashlight.vmdl";
-	protected override string WorldModelPath => "weapons/rust_pistol/rust_pistol.vmdl";
+	public Assets.Swep Asset => ResourceLibrary.Get<Assets.Swep>( "config/weapons/jailPlacer.swep" );
+	public override string ViewModelPath => Asset.ViewModel;
+	protected override string WorldModelPath => Asset.WorldModel;
 
 	private Entity _preview;
 
@@ -27,12 +28,12 @@ public class JailPlacer : Weapon
 		base.Simulate( player );
 
 		var fwdTraceResult = Trace.Ray( Owner.EyePosition, Owner.EyePosition + Owner.EyeRotation.Forward * 200f )
-			.HitLayer( CollisionLayer.Player, false )
+			.WithoutTags( "player" )
 			.Ignore( Owner )
 			.Run();
 			
 		var downTraceResult = Trace.Ray( fwdTraceResult.EndPosition + Vector3.Up * 10f, fwdTraceResult.EndPosition + Vector3.Down * 200f )
-			.HitLayer( CollisionLayer.Player, false )
+			.WithoutTags( "player" )
 			.Ignore( Owner )
 			.Run();
 		

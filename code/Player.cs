@@ -42,7 +42,7 @@ public partial class Player : Sandbox.Player
 
 	[Net] public Teams Team { get; set; } = Teams.None;
 	[Net] private bool _isArrested { get; set; }
-	public bool IsArrested => (Role != Roles.Cop) && _isArrested;
+	[Net] public bool IsArrested => (Team != Teams.Cops) && _isArrested;
 	[Net] public bool IsFrozen { get; set; }
 
 	public Player()
@@ -93,13 +93,20 @@ public partial class Player : Sandbox.Player
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
 			case Roles.ChiefCop:
-				if ( Game.Jail == null )
+				if ( Game.Jail == null ) // Something is wrong here
 					Inventory.Add( new Weapons.JailPlacer() );
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
 			case Roles.Runner:
 				Inventory.Add( new Weapons.RunnersMelee(), true );
+				Inventory.Add( new Weapons.ThrowingBall() );
 				break;
+			case Roles.None:
+				break;
+			case Roles.Spectator:
+				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 	}
 
@@ -107,14 +114,9 @@ public partial class Player : Sandbox.Player
 	public virtual void Arrest( bool isArrested )
 	{
 		_isArrested = isArrested;
-		CollisionGroup = isArrested ? CollisionGroup.Debris : CollisionGroup.Player;
 
 		if ( isArrested && IsServer )
 			Position = Game.Jail.Position;
-
-		if ( isArrested )
-			if ( IsServer )
-				Position = Game.Jail.Position;
 	}
 
 	[Event("knock")]
