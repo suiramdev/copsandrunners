@@ -17,6 +17,7 @@ public class Phase : Panel
 		
 		Update();
 		Game.Instance.StateChanged += ( _, _ ) => Update();
+		Game.Instance.WinnersChanged += ( _, _ ) => Update(); // I don't think that's the right way
 	}
 
 	private void Update()
@@ -40,7 +41,7 @@ public class Phase : Panel
 				_phaseName.Style.Display = DisplayMode.None;
 				break;
 			case GameStates.End:
-				_phaseName.Text = Game.Instance.Winners == Teams.Cops ? "All runners are arrested" : "Runners escaped from the police";
+				_phaseName.Text = Game.Instance.Winners == Teams.Cops ? "All runners were arrested" : "Runners escaped from the police";
 				break;
 		}
 	}

@@ -16,13 +16,15 @@ public enum GameStates
 }
 
 public delegate void StateChanged( GameStates newState, GameStates lastState );
+public delegate void WinnersChanged( Teams newTeam, Teams lastTeam );
 
 internal partial class Game
 {
 	[Net, Change( nameof(OnStateChanged) )]
 	public GameStates State { get; set; } = GameStates.Wait;
 	[Net] public RealTimeUntil StateTimer { get; set; } = 0f;
-	[Net] public Teams Winners { get; set; } = Teams.None;
+	[Net, Change( nameof(OnWinnersChanged) )] 
+	public Teams Winners { get; set; } = Teams.None;
 	
 	public event StateChanged StateChanged;
 	
@@ -31,6 +33,13 @@ internal partial class Game
 		StateChanged?.Invoke( newState, lastState );
 	}
 
+	public event WinnersChanged WinnersChanged;
+	
+	public void OnWinnersChanged( Teams newTeam, Teams lastTeam )
+	{
+		WinnersChanged?.Invoke( newTeam, lastTeam );
+	}
+	
 	private async Task GameLoop()
 	{
 		while ( !CanStart() )
@@ -91,9 +100,12 @@ internal partial class Game
 			player.Role = Roles.None;
 			player.Team = Teams.None;
 		});
-	
-		if (Jail.IsValid)
+
+		if ( Jail.IsValid )
+		{
 			Jail.Delete();
+			Jail = null;
+		}
 
 		await GameLoop();
 	}
@@ -116,7 +128,7 @@ internal partial class Game
 	{
 		var runners = All.OfType<Player>().Where( player => player.Team == Teams.Runners).ToList();
 		var arrested = runners.Where( player => player.IsArrested ).ToList();
-		
+
 		return runners.Count <= arrested.Count;
 	}
 }
