@@ -93,7 +93,7 @@ public partial class Player : Sandbox.Player
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
 			case Roles.ChiefCop:
-				if ( Game.Jail == null ) // Something is wrong here
+				if ( Game.Instance.Jail == null ) // Something is wrong here
 					Inventory.Add( new Weapons.JailPlacer() );
 				Inventory.Add( new Weapons.CopsMelee() );
 				break;
@@ -116,7 +116,7 @@ public partial class Player : Sandbox.Player
 		_isArrested = isArrested;
 
 		if ( isArrested && IsServer )
-			Position = Game.Jail.Position;
+			Position = Game.Instance.Jail.Position;
 	}
 
 	[Event("knock")]

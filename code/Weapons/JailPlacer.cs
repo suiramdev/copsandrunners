@@ -56,8 +56,8 @@ public class JailPlacer : Weapon
 		
 		if ( IsServer )
 		{
-			Game.Jail?.Delete();
-			Game.Jail = new Jail { Position = Position };
+			Game.Instance.Jail?.Delete();
+			Game.Instance.Jail = new Jail { Position = Position };
 			Delete();
 		}
 	}

@@ -9,12 +9,10 @@ namespace copsandrunners;
 
 partial class Game : Sandbox.Game
 {
-	public static Game Instance;
+	public static Game Instance => Current as Game;
 
 	public Game()
 	{
-		Instance = this;
-
 		if ( !IsServer )
 			return;
 
@@ -22,7 +20,7 @@ partial class Game : Sandbox.Game
 		_ = GameLoop();
 	}
 	
-	[Net] public static Jail Jail { get; set; }
+	[Net] public Jail Jail { get; set; }
 
 	public override void ClientJoined( Client client )
 	{
