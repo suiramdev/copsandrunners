@@ -10,7 +10,7 @@ public class CopsMelee : Melee
 	{
 		base.AttackPrimary();
 
-		if ( !TraceResult.Entity.IsValid || ((Player)TraceResult.Entity).IsArrested )
+		if ( !TraceResult.Hit || !TraceResult.Entity.IsValid || ((Player)TraceResult.Entity).IsArrested )
 			return;
 
 		((Player)TraceResult.Entity).Arrest( true );
