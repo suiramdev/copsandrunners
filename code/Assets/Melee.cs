@@ -5,7 +5,7 @@ namespace copsandrunners.Assets;
 [GameResource("Melee Weapon", "melee", "A melee weapon.")]
 public partial class Melee : GameResource
 {
-	[Property, ResourceType("vmdl")]
+	[ResourceType("vmdl")]
 	public string WorldModel { get; set; }
 	
 	[ResourceType("vmdl")]
