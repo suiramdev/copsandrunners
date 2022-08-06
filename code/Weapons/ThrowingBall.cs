@@ -18,8 +18,9 @@ public struct ThrowData
 
 public class ThrowingBall : Weapon
 {
-	public override string ViewModelPath => "weapons/rust_flashlight/v_rust_flashlight.vmdl";
-	protected override string WorldModelPath => "weapons/rust_pistol/rust_pistol.vmdl";
+	public Assets.Weapon Asset => ResourceLibrary.Get<Assets.Weapon>( "config/weapons/ball.weapon" );
+	public override string ViewModelPath => Asset.ViewModel;
+	protected override string WorldModelPath => Asset.WorldModel;
 
 	private const float Gravity = 9.8f;
 

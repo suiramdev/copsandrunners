@@ -2,10 +2,10 @@
 
 namespace copsandrunners.Assets;
 
-[GameResource("Swep", "swep", "A swep.")]
-public partial class Swep : GameResource
+[GameResource("Weapon", "weapon", "A simple weapon.")]
+public partial class Weapon : GameResource
 {
-	[Property, ResourceType("vmdl")]
+	[ResourceType("vmdl")]
 	public string WorldModel { get; set; }
 	
 	[ResourceType("vmdl")]

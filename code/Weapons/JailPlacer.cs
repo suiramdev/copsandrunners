@@ -8,7 +8,7 @@ namespace copsandrunners.Weapons;
 
 public class JailPlacer : Weapon
 {
-	public Assets.Swep Asset => ResourceLibrary.Get<Assets.Swep>( "config/weapons/jailPlacer.swep" );
+	public Assets.Weapon Asset => ResourceLibrary.Get<Assets.Weapon>( "config/weapons/jailPlacer.weapon" );
 	public override string ViewModelPath => Asset.ViewModel;
 	protected override string WorldModelPath => Asset.WorldModel;
 
