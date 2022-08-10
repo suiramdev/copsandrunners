@@ -18,6 +18,8 @@ public abstract class Melee : Weapon
 		
 		// Outdated
 		//_ = new Camera.Modifiers.MeleeShake( Asset.ShakeCurve, Asset.ShakeForce * ForceMultiplier );
+		(((Player)Owner).CameraMode as Camera.FirstPersonCamera)?.Shake( Asset.ShakeCurve,
+			Asset.ShakeForce * ForceMultiplier ); // HOW THE FUCK SHAKING WORKS
 		ViewModelEntity?.SetAnimParameter( "attack_hit", true );
 		Sound.FromEntity( "woosh.melee", Owner);
 		

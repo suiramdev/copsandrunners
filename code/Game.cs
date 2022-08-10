@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using copsandrunners.Entities;
-using copsandrunners.UI;
+﻿using copsandrunners.Entities;
 using Sandbox;
 
 namespace copsandrunners;
@@ -16,7 +12,6 @@ partial class Game : Sandbox.Game
 		if ( !IsServer )
 			return;
 
-		_ = new Hud();
 		_ = GameLoop();
 	}
 	

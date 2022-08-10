@@ -1,4 +1,5 @@
-﻿using Sandbox;
+﻿using System.Threading.Tasks;
+using Sandbox;
 
 namespace copsandrunners.Camera;
 
@@ -42,14 +43,15 @@ public class FirstPersonCamera : CameraMode
 		_lastPos = Position;
 	}
 	
-	public bool Shake(FGDCurve curve, float power)
+	public async Task Shake(FGDCurve curve, float power)
 	{
-		var delta = ((float)_lifeTime).LerpInverse( 0, curve.Maxs.x );
-		var y = curve.Get( delta );
+		while ( _lifeTime < curve.Maxs.x )
+		{
+			var delta = ((float)_lifeTime).LerpInverse( 0, curve.Maxs.x );
+			var y = curve.Get( delta );
 		
-		Rotation *= Rotation.FromAxis( Vector3.Up, power * y * _invertX);
-		Rotation *= Rotation.FromAxis( Vector3.Right, power * y * _invertY);
-
-		return _lifeTime < curve.Maxs.x;
+			Rotation *= Rotation.FromAxis( Vector3.Up, power * y * _invertX);
+			Rotation *= Rotation.FromAxis( Vector3.Right, power * y * _invertY);	
+		}
 	}
 }

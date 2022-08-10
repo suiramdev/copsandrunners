@@ -10,7 +10,7 @@ public class RunnersMelee : Melee
 	{
 		base.AttackPrimary();
 
-		if ( !TraceResult.Hit || TraceResult.Entity == null )
+		if ( !TraceResult.Hit || TraceResult.Entity is null )
 			return;
 
 		var targetPawn = (Player)TraceResult.Entity;

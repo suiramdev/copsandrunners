@@ -7,8 +7,8 @@ namespace copsandrunners.UI;
 
 public class Phase : Panel
 {
-	private Label _phaseTimer;
-	private Label _phaseName;
+	private readonly Label _phaseTimer;
+	private readonly Label _phaseName;
 	
 	public Phase()
 	{
@@ -16,10 +16,9 @@ public class Phase : Panel
 		_phaseName = Add.Label("");
 		
 		Update();
-		Game.Instance.StateChanged += ( _, _ ) => Update();
-		Game.Instance.WinnersChanged += ( _, _ ) => Update(); // I don't think that's the right way
 	}
 
+	[GameEvent.WinnersChanged, GameEvent.StateChanged]
 	private void Update()
 	{
 		_phaseTimer.Style.Display = DisplayMode.Flex;
@@ -43,6 +42,8 @@ public class Phase : Panel
 			case GameStates.End:
 				_phaseName.Text = Game.Instance.Winners == Teams.Cops ? "All runners were arrested" : "Runners escaped from the police";
 				break;
+			default:
+				throw new ArgumentOutOfRangeException();
 		}
 	}
 

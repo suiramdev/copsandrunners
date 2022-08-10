@@ -3,16 +3,13 @@ using Sandbox.UI;
 
 namespace copsandrunners.UI;
 
-public class Hud : HudEntity<RootPanel>
+public class Hud : RootPanel
 {
 	public Hud()
 	{
-		if (IsServer)
-			return;
-		
-		RootPanel.StyleSheet.Load( "/UI/Hud.scss" );
+		StyleSheet.Load( "/UI/Hud.scss" );
 
-		RootPanel.AddChild<Inventory>();
-		RootPanel.AddChild<Phase>();
+		AddChild<InventoryBar>();
+		AddChild<Phase>();
 	}
 }

@@ -3,7 +3,7 @@
 namespace copsandrunners.Assets;
 
 [GameResource("Melee Weapon", "melee", "A melee weapon.")]
-public partial class Melee : GameResource
+public class Melee : GameResource
 {
 	[ResourceType("vmdl")]
 	public string WorldModel { get; set; }
