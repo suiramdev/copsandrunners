@@ -1,15 +1,11 @@
 ﻿using System.Threading.Tasks;
 using Sandbox;
 
-namespace copsandrunners.Camera;
+namespace copsandrunners.Cameras;
 
 public class FirstPersonCamera : CameraMode
 {
 	private Vector3 _lastPos;
-	private readonly float _invertX = Rand.Int( -1, 1 );
-	private readonly float _invertY = Rand.FromArray( new[] { -1, 1 } );
-	
-	private readonly TimeSince _lifeTime = 0;
 
 	public override void Activated()
 	{
@@ -28,30 +24,35 @@ public class FirstPersonCamera : CameraMode
 		if ( pawn == null ) return;
 
 		var eyePos = pawn.EyePosition;
-		if ( eyePos.Distance( _lastPos ) < 300 ) // TODO: Tweak this, or add a way to invalidate lastpos when teleporting
-		{
-			Position = Vector3.Lerp( eyePos.WithZ( _lastPos.z ), eyePos, 20.0f * Time.Delta );
-		}
-		else
-		{
-			Position = eyePos;
-		}
+		Position = eyePos.Distance( _lastPos ) < 300 ? Vector3.Lerp( eyePos.WithZ( _lastPos.z ), eyePos, 20.0f * Time.Delta ) : eyePos;
 
 		Rotation = pawn.EyeRotation;
 
 		Viewer = pawn;
 		_lastPos = Position;
 	}
-	
-	public async Task Shake(FGDCurve curve, float power)
+
+	#region Shake effect
+	private readonly float _invertX = Rand.Int( -1, 1 );
+	private readonly float _invertY = Rand.FromArray( new[] { -1, 1 } );
+
+	private TimeSince _sinceShake = 0;
+	public Task Shake(FGDCurve curve, float power) // Should it really be a Task ?
 	{
-		while ( _lifeTime < curve.Maxs.x )
+		_sinceShake = 0;
+		while ( true )
 		{
-			var delta = ((float)_lifeTime).LerpInverse( 0, curve.Maxs.x );
+			if ( _sinceShake >= curve.Maxs.x )
+				break;
+
+			var delta = ((float)_sinceShake).LerpInverse( 0, curve.Maxs.x );
 			var y = curve.Get( delta );
 		
 			Rotation *= Rotation.FromAxis( Vector3.Up, power * y * _invertX);
 			Rotation *= Rotation.FromAxis( Vector3.Right, power * y * _invertY);	
 		}
+		
+		return Task.CompletedTask;
 	}
+	#endregion
 }

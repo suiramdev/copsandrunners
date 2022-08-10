@@ -101,7 +101,7 @@ public partial class Player : AnimatedEntity
 
 		Controller = Role == Roles.Spectator ? new NoclipController() : new Controllers.WalkController();
 		Animator = new StandardPlayerAnimator();
-		CameraMode = new FirstPersonCamera();
+		CameraMode = new Cameras.FirstPersonCamera();
 
 		EnableAllCollisions = true;
 		EnableDrawing = Role != Roles.Spectator;
