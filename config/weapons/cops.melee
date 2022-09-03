@@ -2,20 +2,21 @@
 {
 	data = 
 	{
+		SwingSound = resource:"sounds/weapons/melee/woosh.sound"
+		HitSound = resource:"sounds/weapons/melee/punch.sound"
 		Damages = 0
 		RandMultiplier = "0,0"
 		ShakeForce = 0
 		ShakeCurve = null
-		PrimarySound = null
-		SecondarySound = null
-		PrimaryRate = 0
-		SecondaryRate = 0
+		CustomSound = resource:"sounds/events/arrest.sound"
+		PrimaryRate = -1
+		SecondaryRate = -1
 		Spawnable = false
 		CanDrop = false
 		ViewModelPath = null
 		HandsModelPath = null
 		WorldModelPath = null
-		HoldType = "None"
+		HoldType = "Fists"
 		Label = "Cops melee"
 	}
 }

@@ -14,6 +14,6 @@ public class CopsMelee : Melee
 
 		((Players.Player)TraceResult.Entity).Arrest( true );
 
-		Sound.FromWorld( "arrest.whistle", TraceResult.Entity.Position );
+		Sound.FromWorld( Info.CustomSound, TraceResult.Entity.Position );
 	}
 }

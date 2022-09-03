@@ -2,7 +2,6 @@
 using copsandrunners.Players;
 using Sandbox;
 using Sandbox.UI;
-using Player = copsandrunners.Players.Player;
 
 namespace copsandrunners.UI;
 
@@ -16,7 +15,7 @@ public class InventoryBar : Panel
 		Log.Info( "ddd" );
 		_slots.Clear();
 		
-		var inventory = ((Player)Local.Pawn)?.Inventory;
+		var inventory = ((Players.Player)Local.Pawn)?.Inventory;
 		if ( inventory is null ) return;
 
 		for ( var i = 0; i < inventory.Count(); i++ )
@@ -30,7 +29,7 @@ public class InventoryBar : Panel
 	[InventoryEvent.SetActiveSlot]
 	public void Update()
 	{
-		var inventory = ((Player)Local.Pawn)?.Inventory;
+		var inventory = ((Players.Player)Local.Pawn)?.Inventory;
 		if ( inventory is null ) return;
 		
 		for ( var i = 0; i < _slots.Count; i++ )

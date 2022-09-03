@@ -1,6 +1,5 @@
 ﻿using copsandrunners.GameResources;
 using Sandbox;
-using Player = copsandrunners.Players.Player;
 
 namespace copsandrunners.Items;
 

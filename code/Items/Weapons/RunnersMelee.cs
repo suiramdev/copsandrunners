@@ -28,7 +28,7 @@ public class RunnersMelee : Melee
 				
 			var particles = Particles.Create( "particles/confetti.vpcf" );
 			particles.SetEntityBone( 0, TraceResult.Entity, 2 );
-			Sound.FromWorld( "horn", TraceResult.Entity.Position );
+			Sound.FromWorld( Info.CustomSound, TraceResult.Entity.Position );
 		}
 	}
 }

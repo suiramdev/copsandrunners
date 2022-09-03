@@ -2,10 +2,9 @@
 {
 	data = 
 	{
-		PrimarySound = null
-		SecondarySound = null
-		PrimaryRate = 0
-		SecondaryRate = 0
+		CustomSound = null
+		PrimaryRate = -1
+		SecondaryRate = -1
 		Spawnable = false
 		CanDrop = false
 		ViewModelPath = null

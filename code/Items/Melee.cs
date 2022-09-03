@@ -20,17 +20,14 @@ public abstract class Melee : Weapon
 		/*(((Player)Owner).CameraMode as Cameras.FirstPersonCamera)?.Shake( Asset.ShakeCurve,
 			Asset.ShakeForce * ForceMultiplier ); // HOW THE FUCK SHAKING WORKS*/
 		ViewModelEntity?.SetAnimParameter( "attack_hit", true );
-		Sound.FromEntity( "woosh.melee", Owner);
+		Sound.FromEntity( Info.SwingSound, Owner);
 		
 		TraceResult = Trace.Ray( Owner.EyePosition, Owner.EyePosition + Owner.EyeRotation.Forward * 50 )
 			.WithTag( "player" )
 			.Ignore( Owner )
 			.Run();
 
-		if ( TraceResult.Entity != null )
-		{
-			Sound.FromEntity( "punch.melee", Owner );
-			Sound.FromEntity( "hit.melee", Owner );
-		}
+		if ( TraceResult.Entity != null ) 
+			Sound.FromEntity( Info.HitSound, Owner );
 	}
 }
