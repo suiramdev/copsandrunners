@@ -19,8 +19,6 @@ public partial class Player : AnimatedEntity
 	#region Controls
 	[Net, Predicted]
 	private PawnController _controller { get; set; }
-
-	[Net, Predicted]
 	public PawnController Controller
 	{
 		get => DevController ?? _controller;
