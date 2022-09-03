@@ -20,14 +20,18 @@ public enum Teams
 
 public partial class Player
 {
-	[Net, Change( nameof(OnRoleChanged) )] 
-	public Roles Role { get; set; } = Roles.None;
+	[Net] private Roles _Role { get; set; } = Roles.None;
+	public Roles Role
+	{
+		get => _Role;
+		set
+		{
+			Host.AssertServer();
+			
+			Respawn();
+			_Role = value;
+		}
+	}
 	
 	[Net] public Teams Team { get; set; } = Teams.None;
-
-	public void OnRoleChanged()
-	{
-		if (IsServer) 
-			Respawn();
-	}
 }
