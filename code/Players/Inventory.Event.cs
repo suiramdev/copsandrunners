@@ -4,24 +4,24 @@ namespace copsandrunners.Players;
 
 public static class InventoryEvent
 {
-	public const string ChildAdded = "ChildAdded";
+	public const string ItemAdded = "ItemAdded";
 
-	public class ChildAddedAttribute : EventAttribute
+	public class ItemAddedAttribute : EventAttribute
 	{
-		public ChildAddedAttribute() : base(ChildAdded) { }
+		public ItemAddedAttribute() : base(ItemAdded) { }
 	}
 	
-	public const string ChildRemoved = "ChildRemoved";
+	public const string ItemRemoved = "ItemRemoved";
 
-	public class ChildRemovedAttribute : EventAttribute
+	public class ItemRemovedAttribute : EventAttribute
 	{
-		public ChildRemovedAttribute() : base(ChildRemoved) { }
+		public ItemRemovedAttribute() : base(ItemRemoved) { }
 	}
 	
-	public const string SetActiveSlot = "SetActiveSlot";
+	public const string SetActive = "SetActive";
 	
-	public class SetActiveSlotAttribute : EventAttribute
+	public class SetActiveAttribute : EventAttribute
 	{
-		public SetActiveSlotAttribute() : base(SetActiveSlot) { }
+		public SetActiveAttribute() : base(SetActive) { }
 	}
 }

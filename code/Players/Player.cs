@@ -1,4 +1,5 @@
 ﻿using System;
+using copsandrunners.Items;
 using copsandrunners.Items.Weapons;
 using copsandrunners.UI;
 using Sandbox;
@@ -56,19 +57,19 @@ public partial class Player : AnimatedEntity
 	public Player()
 	{
 		Inventory = new Inventory( this );
-		
+
 		if (IsClient) // Should it be here?
 			_ = new Hud();
 	}
 	
 	public override void Spawn()
 	{
+		base.Spawn();
+		
 		EnableLagCompensation = true;
 
 		Tags.Add( "player" );
 
-		base.Spawn();
-	
 		if (IsServer)
 			Respawn();
 	}
@@ -87,6 +88,8 @@ public partial class Player : AnimatedEntity
 	public void Respawn()
 	{
 		Host.AssertServer();
+		
+		Log.Info( "ddd" );
 
 		SetModel( "models/citizen/citizen.vmdl" );
 
@@ -117,16 +120,16 @@ public partial class Player : AnimatedEntity
 	/// </summary>
 	private void Loadout()
 	{
-		Inventory.DeleteContents();
+		Inventory.Clear();
 		switch ( Role )
 		{
 			case Roles.Cop:
-				Inventory.Add( new CopsMelee() );
+				Inventory.Add( new CopsMelee(), true );
 				break;
 			case Roles.ChiefCop:
 				if ( Game.Instance.Jail is null ) // Something is wrong here
 					Inventory.Add( new JailPlacer() );
-				Inventory.Add( new CopsMelee() );
+				Inventory.Add( new CopsMelee(), true );
 				break;
 			case Roles.Runner:
 				Inventory.Add( new RunnersMelee(), true );
@@ -241,7 +244,7 @@ public partial class Player : AnimatedEntity
 
 		tr.Surface.DoFootstep( this, tr, foot, volume );
 	}
-
+	
 	public override void StartTouch( Entity other )
 	{
 		if ( IsClient ) return;
@@ -252,7 +255,8 @@ public partial class Player : AnimatedEntity
 			return;
 		}
 
-		Inventory?.Add( other, Inventory.Active == null );
+		if ( other is Carriable carriable )
+			Inventory.Add( carriable, Inventory.Active is null );
 	}
 	
 	public override void TakeDamage( DamageInfo info )
@@ -294,15 +298,5 @@ public partial class Player : AnimatedEntity
 
 		if ( next is BaseCarriable nextBc ) 
 			nextBc.ActiveStart( this );
-	}
-
-	public override void OnChildAdded( Entity child )
-	{
-		Inventory?.OnChildAdded( child );
-	}
-
-	public override void OnChildRemoved( Entity child )
-	{
-		Inventory?.OnChildRemoved( child );
 	}
 }
