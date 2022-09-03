@@ -28,8 +28,8 @@ public partial class Player
 		{
 			Host.AssertServer();
 			
-			Respawn();
 			_Role = value;
+			Respawn();
 		}
 	}
 	
