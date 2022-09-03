@@ -6,7 +6,11 @@
   "Schema": 1,
   "HasAssets": true,
   "AssetsPath": "",
-  "ResourcePaths": null,
+  "ResourcePaths": [
+    "/code/ui/*",
+    "/fonts/*",
+    "/config/*"
+  ],
   "HasCode": true,
   "CodePath": "code",
   "RootNamespace": "Sandbox",
