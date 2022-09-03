@@ -2,10 +2,6 @@
 {
 	data = 
 	{
-		Damages = 0
-		RandMultiplier = "0,0"
-		ShakeForce = 0
-		ShakeCurve = null
 		PrimarySound = null
 		SecondarySound = null
 		PrimaryRate = 0
@@ -16,6 +12,6 @@
 		HandsModelPath = null
 		WorldModelPath = null
 		HoldType = "None"
-		Label = "Runners melee"
+		Label = "Jail placer"
 	}
 }

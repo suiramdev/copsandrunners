@@ -2,7 +2,16 @@
 {
 	data = 
 	{
-		WorldModel = resource:"weapons/rust_pistol/rust_pistol.vmdl"
-		ViewModel = null
+		PrimarySound = null
+		SecondarySound = null
+		PrimaryRate = 0
+		SecondaryRate = 0
+		Spawnable = false
+		CanDrop = false
+		ViewModelPath = null
+		HandsModelPath = null
+		WorldModelPath = null
+		HoldType = "None"
+		Label = "Plastic ball"
 	}
 }
