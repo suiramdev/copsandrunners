@@ -1,7 +1,6 @@
-﻿using System.Threading.Tasks;
-using Sandbox;
+﻿using Sandbox;
 
-namespace copsandrunners.Cameras;
+namespace copsandrunners.Players.Cameras;
 
 public class FirstPersonCamera : CameraMode
 {
@@ -31,28 +30,4 @@ public class FirstPersonCamera : CameraMode
 		Viewer = pawn;
 		_lastPos = Position;
 	}
-
-	#region Shake effect
-	private readonly float _invertX = Rand.Int( -1, 1 );
-	private readonly float _invertY = Rand.FromArray( new[] { -1, 1 } );
-
-	private TimeSince _sinceShake = 0;
-	public Task Shake(FGDCurve curve, float power) // Should it really be a Task ?
-	{
-		_sinceShake = 0;
-		while ( true )
-		{
-			if ( _sinceShake >= curve.Maxs.x )
-				break;
-
-			var delta = ((float)_sinceShake).LerpInverse( 0, curve.Maxs.x );
-			var y = curve.Get( delta );
-		
-			Rotation *= Rotation.FromAxis( Vector3.Up, power * y * _invertX);
-			Rotation *= Rotation.FromAxis( Vector3.Right, power * y * _invertY);	
-		}
-		
-		return Task.CompletedTask;
-	}
-	#endregion
 }

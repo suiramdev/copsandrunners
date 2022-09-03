@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using Sandbox;
 
-namespace copsandrunners;
+namespace copsandrunners.Players;
 
 public class Inventory : IBaseInventory
 {

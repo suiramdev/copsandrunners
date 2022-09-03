@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Diagnostics;
 using copsandrunners.Entities;
 using copsandrunners.Utils;
 using Sandbox;
 
-namespace copsandrunners.Weapons;
+namespace copsandrunners.Items.Weapons;
 
+[ClassName("ball")]
 public class ThrowingBall : Weapon
 {
-	public Assets.Weapon Asset => ResourceLibrary.Get<Assets.Weapon>( "config/weapons/ball.weapon" );
-	public override string ViewModelPath => Asset.ViewModel;
-	protected override string WorldModelPath => Asset.WorldModel;
-
 	private const float Force = 800f;
 
 	public override async void AttackPrimary()
@@ -45,6 +41,5 @@ public class ThrowingBall : Weapon
 		DebugOverlay.Line( startingPosition, startingPosition + throwData.Velocity, Color.Green );
 		DebugOverlay.Line( startingPosition, startingPosition + throwData.EndPosition, Color.Blue );
 		DebugOverlay.Sphere( startingPosition + (throwData.EndPosition / 2).WithZ( throwData.Height ), 5f, Color.Red );
-
 	}
 }

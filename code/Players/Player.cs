@@ -1,8 +1,9 @@
 ﻿using System;
+using copsandrunners.Items.Weapons;
 using copsandrunners.UI;
 using Sandbox;
 
-namespace copsandrunners;
+namespace copsandrunners.Players;
 
 public class OnArrestEventArgs : EventArgs
 {
@@ -99,7 +100,7 @@ public partial class Player : AnimatedEntity
 		Game.Instance.MoveToSpawnpoint( this );
 		ResetInterpolation();
 
-		Controller = Role == Roles.Spectator ? new NoclipController() : new Controllers.WalkController();
+		Controller = Role == Roles.Spectator ? new Controllers.NoclipController() : new Controllers.WalkController();
 		Animator = new StandardPlayerAnimator();
 		CameraMode = new Cameras.FirstPersonCamera();
 
@@ -120,16 +121,16 @@ public partial class Player : AnimatedEntity
 		switch ( Role )
 		{
 			case Roles.Cop:
-				Inventory.Add( new Weapons.CopsMelee() );
+				Inventory.Add( new CopsMelee() );
 				break;
 			case Roles.ChiefCop:
 				if ( Game.Instance.Jail is null ) // Something is wrong here
-					Inventory.Add( new Weapons.JailPlacer() );
-				Inventory.Add( new Weapons.CopsMelee() );
+					Inventory.Add( new JailPlacer() );
+				Inventory.Add( new CopsMelee() );
 				break;
 			case Roles.Runner:
-				Inventory.Add( new Weapons.RunnersMelee(), true );
-				Inventory.Add( new Weapons.ThrowingBall() );
+				Inventory.Add( new RunnersMelee(), true );
+				Inventory.Add( new ThrowingBall() );
 				break;
 			case Roles.None:
 				break;

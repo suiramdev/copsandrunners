@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using copsandrunners.Players;
 using Sandbox;
 
 namespace copsandrunners;
@@ -46,7 +47,7 @@ public partial class Game
 			await WaitStateTimer();
 
 			// Set players roles and positions
-			var players = All.OfType<Player>().ToList();
+			var players = All.OfType<Players.Player>().ToList();
 
 			var chiefSelected = false;
 			for ( var i = 0; i < Math.Round( (double)players.Count / 3 ); i++ )
@@ -87,7 +88,7 @@ public partial class Game
 			await WaitStateTimer();
 
 			Winners = Teams.None;
-			players = All.OfType<Player>().ToList();
+			players = All.OfType<Players.Player>().ToList();
 			players.ForEach( player =>
 			{
 				player.Arrest( false );
@@ -119,7 +120,7 @@ public partial class Game
 	
 	private bool HasCopWon()
 	{
-		var runners = All.OfType<Player>().Where( player => player.Team == Teams.Runners).ToList();
+		var runners = All.OfType<Players.Player>().Where( player => player.Team == Teams.Runners).ToList();
 		var arrested = runners.Where( player => player.IsArrested ).ToList();
 
 		return runners.Count <= arrested.Count;

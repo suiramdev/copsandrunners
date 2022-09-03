@@ -1,17 +1,11 @@
-﻿using System;
-using copsandrunners.Entities;
-using copsandrunners.UI;
+﻿using copsandrunners.Entities;
 using Sandbox;
-using Sandbox.UI;
 
-namespace copsandrunners.Weapons;
+namespace copsandrunners.Items.Weapons;
 
+[ClassName("jail_placer")]
 public class JailPlacer : Weapon
 {
-	public Assets.Weapon Asset => ResourceLibrary.Get<Assets.Weapon>( "config/weapons/jailPlacer.weapon" );
-	public override string ViewModelPath => Asset.ViewModel;
-	protected override string WorldModelPath => Asset.WorldModel;
-
 	private Entity _preview;
 
 	public new Vector3 Position;

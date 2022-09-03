@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace copsandrunners;
+namespace copsandrunners.Players;
 
 public partial class Player
 {

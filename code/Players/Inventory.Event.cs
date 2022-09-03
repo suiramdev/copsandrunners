@@ -1,6 +1,6 @@
 ﻿using Sandbox;
 
-namespace copsandrunners;
+namespace copsandrunners.Players;
 
 public static class InventoryEvent
 {

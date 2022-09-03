@@ -1,5 +1,5 @@
 ﻿using System;
-using Sandbox;
+using copsandrunners.Players;
 using Sandbox.UI;
 using Sandbox.UI.Construct;
 

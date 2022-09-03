@@ -1,12 +1,11 @@
-﻿using Sandbox;
+﻿using copsandrunners.GameResources;
+using Sandbox;
 
-namespace copsandrunners.Weapons;
+namespace copsandrunners.Items;
 
 public abstract class Melee : Weapon
 {
-	public virtual Assets.Melee Asset { get; }
-	public override string ViewModelPath => Asset.ViewModel;
-	protected override string WorldModelPath => Asset.WorldModel;
+	public new MeleeInfo Info => (MeleeInfo)base.Info;
 	protected float ForceMultiplier;
 	protected TraceResult TraceResult;
 
@@ -18,8 +17,8 @@ public abstract class Melee : Weapon
 		
 		// Outdated
 		//_ = new Camera.Modifiers.MeleeShake( Asset.ShakeCurve, Asset.ShakeForce * ForceMultiplier );
-		(((Player)Owner).CameraMode as Cameras.FirstPersonCamera)?.Shake( Asset.ShakeCurve,
-			Asset.ShakeForce * ForceMultiplier ); // HOW THE FUCK SHAKING WORKS
+		/*(((Player)Owner).CameraMode as Cameras.FirstPersonCamera)?.Shake( Asset.ShakeCurve,
+			Asset.ShakeForce * ForceMultiplier ); // HOW THE FUCK SHAKING WORKS*/
 		ViewModelEntity?.SetAnimParameter( "attack_hit", true );
 		Sound.FromEntity( "woosh.melee", Owner);
 		

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
+using copsandrunners.Players;
 using Sandbox;
 using Sandbox.UI;
+using Player = copsandrunners.Players.Player;
 
 namespace copsandrunners.UI;
 

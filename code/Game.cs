@@ -1,4 +1,5 @@
 ﻿using copsandrunners.Entities;
+using copsandrunners.Players;
 using Sandbox;
 
 namespace copsandrunners;
@@ -21,7 +22,7 @@ partial class Game : Sandbox.Game
 	{
 		base.ClientJoined( client );
 
-		var player = new Player { Role = State == GameStates.Wait ? Roles.None : Roles.Spectator };
+		var player = new Players.Player { Role = State == GameStates.Wait ? Roles.None : Roles.Spectator };
 
 		client.Pawn = player;
 	}
