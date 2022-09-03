@@ -9,8 +9,8 @@ public class WeaponInfo : CarriableInfo
 	public string CustomSound { get; set; }
 
 	[Category("Stats"), Description("Cooldown between shots on primary fire")]
-	public float PrimaryRate => -1f;
+	public float PrimaryRate { get; set; } = -1f;
 
 	[Category( "Stats" ), Description( "Cooldown between shots on secondary fire" )]
-	public float SecondaryRate => -1f;
+	public float SecondaryRate { get; set; } = -1f;
 }
