@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using copsandrunners.Items;
 using copsandrunners.Players;
 using Sandbox;
 using Sandbox.UI;
@@ -26,12 +27,15 @@ public class InventoryBar : Panel
 	public void Rebuild()
 	{
 		Log.Info( "ddd" );
+
 		_slots.Clear();
 		
-		var inventory = ((Players.Player)Local.Pawn)?.Inventory;
+		var inventory = (Local.Pawn as Players.Player)?.Inventory;
 		if ( inventory is null ) return;
+		
+		Log.Info( inventory.Items.Count );
 
-		for ( var i = 0; i < inventory.Count; i++ )
+		for ( var i = 0; i < inventory.Items.Count; i++ )
 		{
 			var slot = new InventorySlot( i, this );
 			slot.SetClass( "active", inventory.ActiveSlot == i );
@@ -42,7 +46,7 @@ public class InventoryBar : Panel
 	[InventoryEvent.SetActive]
 	public void Update()
 	{
-		var inventory = ((Players.Player)Local.Pawn)?.Inventory;
+		var inventory = (Local.Pawn as Players.Player)?.Inventory;
 		if ( inventory is null ) return;
 		
 		for ( var i = 0; i < _slots.Count; i++ )
@@ -52,8 +56,11 @@ public class InventoryBar : Panel
 	[Event.BuildInput]
 	private void BuildInput( InputBuilder inputBuilder )
 	{
+		var inventory = (Local.Pawn as Players.Player)?.Inventory;
+		if ( inventory is null ) return;
+		
 		for ( var i = 0; i < SlotInputs.Length; i++ )
 			if ( inputBuilder.Pressed( SlotInputs[i] ) )
-				((Players.Player)Local.Pawn)?.Inventory.SetActive( i );
+				Log.Info( inventory.Items.Count );
 	}
 }

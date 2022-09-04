@@ -1,29 +1,44 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using copsandrunners.Items;
 using Sandbox;
 
 namespace copsandrunners.Players;
 
-public class Inventory : IEnumerable<Carriable>
+public partial class Inventory : BaseNetworkable
 {
-	public Player Owner { get; private set; }
+	[Net]
+	[HideInEditor]
+	public Player Owner { get; }
 
-	public Carriable Active { get; set; }
-
+	[HideInEditor]
+	public Carriable Active
+	{
+		get => Owner.ActiveCarriable;
+		set => Owner.ActiveCarriable = value;
+	}
+	
+	[HideInEditor]
 	public int ActiveSlot
 	{
-		get => _list.IndexOf( Active );
+		get => Items.IndexOf( Active );
 	}
 
-	private readonly List<Carriable> _list = new(10);
-	public int Count => _list.Count;
-	public int Capacity => _list.Capacity;
-	public Carriable this[ int i ] => _list[i];
+	[Net]
+	public IList<Carriable> Items { get; set; }
+	public readonly int Capacity = 10;
 
 	public Inventory( Player owner )
 	{
 		Owner = owner;
+		
+		Event.Register( this );
+	}
+	
+	~Inventory()
+	{
+		Event.Unregister( this );
 	}
 
 	public bool Add( Carriable carriable, bool makeActive = false )
@@ -33,17 +48,17 @@ public class Inventory : IEnumerable<Carriable>
 		if ( !carriable.IsValid() )
 			return false;
 
-		if ( _list.Contains( carriable ) )
+		if ( Items.Contains( carriable ) )
 			return false;
 
-		if ( Count >= Capacity )
+		if ( Items.Count >= Capacity )
 			return false;
 		
-		_list.Add( carriable );
+		Items.Add( carriable );
 		carriable.SetParent( Owner, true );
 
 		if ( makeActive )
-			SetActive( Count - 1 );
+			SetActive( Items.Count - 1 );
 		
 		Event.Run( InventoryEvent.ItemAdded );
 
@@ -54,35 +69,33 @@ public class Inventory : IEnumerable<Carriable>
 	{
 		Host.AssertServer();
 		
-		if ( !_list.Contains( carriable ) )
+		if ( !Items.Contains( carriable ) )
 			return false;
 		
-		_list.Remove( carriable );
+		Items.Remove( carriable );
 
 		Event.Run( InventoryEvent.ItemRemoved );
 		
 		return true;
 	}
 
-	public bool Remove( int slot ) => Remove( _list[slot] );
+	public bool Remove( int slot ) => Items.ElementAtOrDefault( slot ) != default && Remove( Items[slot] );
 
 	public void Clear()
 	{
 		Host.AssertServer();
 		
-		Log.Info( "Clear INVENTORY SHEESH" );
-		
-		foreach ( var carriable in _list )
+		foreach ( var carriable in Items )
 			carriable.Delete();
 
 		Active = null;
 
-		_list.Clear();
+		Items.Clear();
 	}
 	
 	public bool SetActive( Carriable carriable )
 	{
-		if ( !_list.Contains( carriable ) )
+		if ( !Items.Contains( carriable ) )
 			return false;
 
 		Active = carriable;
@@ -92,14 +105,5 @@ public class Inventory : IEnumerable<Carriable>
 		return true;
 	}
 
-	public bool SetActive( int slot )
-	{
-		if ( _list[slot] is null )
-			return false;
-		
-		return SetActive( _list[slot] );
-	}
-
-	public IEnumerator<Carriable> GetEnumerator() => _list.GetEnumerator();
-	IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+	public bool SetActive( int slot ) => Items.ElementAtOrDefault( slot ) != default && SetActive( Items[slot] );
 }

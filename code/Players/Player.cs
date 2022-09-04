@@ -37,20 +37,9 @@ public partial class Player : AnimatedEntity
 	[Net, Predicted]
 	public PawnAnimator Animator { get; set; }
 	#endregion
-	#region Carry
-	[Net, Predicted]
-	public Entity ActiveChild { get; set; }
 	
-	/// <summary>
-	/// This isn't networked, but it's predicted. If it wasn't then when the prediction system
-	/// re-ran the commands LastActiveChild would be the value set in a future tick, so ActiveEnd
-	/// and ActiveStart would get called multiple times and out of order, causing all kinds of pain.
-	/// </summary>
-	[Predicted]
-	Entity LastActiveChild { get; set; }
-
-	public Inventory Inventory { get; protected set; }
-	#endregion
+	[Net]
+	public Inventory Inventory { get; set; }
 
 	public Player()
 	{
@@ -87,8 +76,6 @@ public partial class Player : AnimatedEntity
 	{
 		Host.AssertServer();
 		
-		Log.Info( "ddd" );
-
 		SetModel( "models/citizen/citizen.vmdl" );
 
 		LifeState = LifeState.Alive;
@@ -118,20 +105,20 @@ public partial class Player : AnimatedEntity
 	/// </summary>
 	private void Loadout()
 	{
-		Inventory.Clear();
+		Inventory?.Clear();
 		switch ( Role )
 		{
 			case Roles.Cop:
-				Inventory.Add( new CopsMelee(), true );
+				Inventory?.Add( new CopsMelee(), true );
 				break;
 			case Roles.ChiefCop:
 				if ( Game.Instance.Jail is null ) // Something is wrong here
-					Inventory.Add( new JailPlacer() );
-				Inventory.Add( new CopsMelee(), true );
+					Inventory?.Add( new JailPlacer() );
+				Inventory?.Add( new CopsMelee(), true );
 				break;
 			case Roles.Runner:
-				Inventory.Add( new RunnersMelee(), true );
-				Inventory.Add( new ThrowingBall() );
+				Inventory?.Add( new RunnersMelee(), true );
+				Inventory?.Add( new ThrowingBall() );
 				break;
 			case Roles.None:
 				break;
@@ -155,11 +142,11 @@ public partial class Player : AnimatedEntity
 		}
 
 		Controller?.Simulate( cl, this, Animator );
+
+		if ( Input.ActiveChild is Carriable carriable )
+			Inventory.SetActive( carriable );
 		
-		if (Input.ActiveChild != null)
-			ActiveChild = Input.ActiveChild;
-		
-		SimulateActiveChild( cl, ActiveChild );
+		SimulateActiveCarriable();
 	}
 	
 	public override void FrameSimulate( Client cl )
@@ -193,7 +180,7 @@ public partial class Player : AnimatedEntity
 		if ( input.StopProcessing )
 			return;
 
-		ActiveChild?.BuildInput( input );
+		ActiveCarriable?.BuildInput( input );
 
 		Controller?.BuildInput( input );
 
@@ -212,7 +199,7 @@ public partial class Player : AnimatedEntity
 	{
 		Host.AssertClient();
 
-		ActiveChild?.PostCameraSetup( ref setup );
+		ActiveCarriable?.PostCameraSetup( ref setup );
 	}
 
 
@@ -242,7 +229,23 @@ public partial class Player : AnimatedEntity
 
 		tr.Surface.DoFootstep( this, tr, foot, volume );
 	}
+
+	public override void TakeDamage( DamageInfo info )
+	{
+		if ( LifeState == LifeState.Dead )
+			return;
+
+		base.TakeDamage( info );
+
+		this.ProceduralHitReaction( info );
+	}
+
+	#region Carriables
+	[Net, Predicted]
+	public Carriable ActiveCarriable { get; set; }
 	
+	private Carriable _lastActiveCarriable;
+
 	public override void StartTouch( Entity other )
 	{
 		if ( IsClient ) return;
@@ -254,47 +257,27 @@ public partial class Player : AnimatedEntity
 		}
 
 		if ( other is Carriable carriable )
-			Inventory.Add( carriable, Inventory.Active is null );
+			Inventory?.Add( carriable, ActiveCarriable is null );
 	}
 	
-	public override void TakeDamage( DamageInfo info )
+	public void SimulateActiveCarriable()
 	{
-		if ( LifeState == LifeState.Dead )
-			return;
-
-		base.TakeDamage( info );
-
-		this.ProceduralHitReaction( info );
-	}
-
-	/// <summary>
-	/// Simulated the active child. This is important because it calls ActiveEnd and ActiveStart.
-	/// If you don't call these things, viewmodels and stuff won't work, because the entity won't
-	/// know it's become the active entity.
-	/// </summary>
-	private void SimulateActiveChild( Client cl, Entity child )
-	{
-		if ( LastActiveChild != child )
+		if ( _lastActiveCarriable != ActiveCarriable )
 		{
-			OnActiveChildChanged( LastActiveChild, child );
-			LastActiveChild = child;
+			OnActiveCarriableChanged( _lastActiveCarriable, ActiveCarriable );
+			_lastActiveCarriable = ActiveCarriable;
 		}
 
-		if ( !LastActiveChild.IsValid() )
+		if ( !ActiveCarriable.IsValid() || !ActiveCarriable.IsAuthority )
 			return;
 
-		if ( LastActiveChild.IsAuthority )
-		{
-			LastActiveChild.Simulate( cl );
-		}
+		ActiveCarriable.Simulate( Client );
 	}
 
-	private void OnActiveChildChanged( Entity previous, Entity next )
+	public void OnActiveCarriableChanged( Carriable previous, Carriable next )
 	{
-		if ( previous is BaseCarriable previousBc ) 
-			previousBc.ActiveEnd( this, previousBc.Owner != this );
-
-		if ( next is BaseCarriable nextBc ) 
-			nextBc.ActiveStart( this );
+		previous?.ActiveEnd( this, previous.Owner != this );
+		next?.ActiveStart( this );
 	}
+	#endregion
 }
